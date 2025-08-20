@@ -223,48 +223,14 @@ export default function Home() {
             </Link>
           </div>
           
-          <div className="overflow-x-auto">
-            <div className="flex gap-6 pb-4" style={{ minWidth: 'fit-content' }}>
-              {products.slice(0, 5).map((product) => (
-                <div key={product.id} className="flex-none w-72">
-                  <ProductCard product={product} />
-                </div>
-              ))}
-            </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {products.slice(0, 6).map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
           </div>
         </div>
       </section>
 
-      <section className="py-8 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="bg-white rounded-lg shadow-sm mb-8 overflow-hidden">
-            <div className="p-4 border-b">
-              <h3 className="text-lg font-semibold text-gray-800">富山県内の体験場所を地図で探す</h3>
-              <p className="text-sm text-gray-600">お近くの体験スポットを見つけましょう</p>
-            </div>
-            <div className="aspect-[16/9] bg-gray-100">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d206314.3648746749!2d137.13756495!3d36.695932799999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x5ff78e1a1bfe21bb%3A0x7b4d4c8f5a3c8e9d!2z5bul5bGx55yM!5e0!3m2!1sja!2sjp!4v1642742069000!5m2!1sja!2sjp"
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen=""
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="富山県内の体験場所マップ"
-              ></iframe>
-            </div>
-            <div className="p-4 bg-gray-50">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-gray-600">マップ上のピンをクリックして詳細をご確認ください</span>
-                <Link href="/locations" className="text-emerald-600 hover:text-emerald-700 font-medium">
-                  体験場所一覧を見る →
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
@@ -294,14 +260,10 @@ export default function Home() {
             </div>
           </div>
           
-          <div className="overflow-x-auto">
-            <div className="flex gap-6 pb-4" style={{ minWidth: 'fit-content' }}>
-              {products.filter(p => p.tags.includes('カップル限定') || p.tags.includes('ファミリー') || p.tags.includes('富山県民限定')).slice(0, 5).map((product) => (
-                <div key={product.id} className="flex-none w-72">
-                  <ProductCard product={product} />
-                </div>
-              ))}
-            </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {products.filter(p => p.tags.includes('カップル限定') || p.tags.includes('ファミリー') || p.tags.includes('富山県民限定')).slice(0, 6).map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
           </div>
         </div>
       </section>
@@ -309,28 +271,26 @@ export default function Home() {
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <h2 className="text-2xl font-bold text-center mb-8 text-gray-800">カテゴリーから探す</h2>
-          <div className="overflow-x-auto">
-            <div className="flex gap-4 pb-4" style={{ minWidth: 'fit-content' }}>
-              {categories.slice(0, 5).map((category, index) => {
-                const icons = [Zap, Activity, Shield, Dumbbell, Stethoscope];
-                const IconComponent = icons[index] || Brain;
-                
-                return (
-                  <Link
-                    key={category.id}
-                    href={`/categories/${category.slug}`}
-                    className="group flex-none"
-                  >
-                    <div className="text-center p-6 rounded-lg bg-white hover:bg-emerald-50 transition shadow-sm border w-40">
-                      <div className="w-12 h-12 bg-emerald-100 rounded-full mx-auto mb-3 group-hover:bg-emerald-200 transition flex items-center justify-center">
-                        <IconComponent className="h-6 w-6 text-emerald-600" />
-                      </div>
-                      <p className="text-sm font-medium text-gray-700">{category.name}</p>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
+            {categories.slice(0, 6).map((category, index) => {
+              const icons = [Zap, Activity, Shield, Dumbbell, Stethoscope];
+              const IconComponent = icons[index] || Brain;
+              
+              return (
+                <Link
+                  key={category.id}
+                  href={`/categories/${category.slug}`}
+                  className="group"
+                >
+                  <div className="text-center p-6 rounded-lg bg-white hover:bg-emerald-50 transition shadow-sm border">
+                    <div className="w-12 h-12 bg-emerald-100 rounded-full mx-auto mb-3 group-hover:bg-emerald-200 transition flex items-center justify-center">
+                      <IconComponent className="h-6 w-6 text-emerald-600" />
                     </div>
-                  </Link>
-                );
-              })}
-            </div>
+                    <p className="text-sm font-medium text-gray-700">{category.name}</p>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -363,10 +323,9 @@ export default function Home() {
             </Link>
           </div>
           
-          <div className="overflow-x-auto">
-            <div className="flex gap-6 pb-4" style={{ minWidth: 'fit-content' }}>
-              {experienceReports.slice(0, 5).map((report) => (
-                <div key={report.id} className="flex-none w-80">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {experienceReports.slice(0, 6).map((report) => (
+              <div key={report.id}>
                   <Link href={`/reports/${report.id}`}>
                     <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition overflow-hidden cursor-pointer">
                   <div className="aspect-video relative bg-gray-100">
@@ -431,7 +390,6 @@ export default function Home() {
                   </Link>
                 </div>
               ))}
-            </div>
           </div>
         </div>
       </section>
@@ -442,10 +400,36 @@ export default function Home() {
             <h2 className="text-2xl font-bold text-gray-800 mb-2">富山県内の体験場所</h2>
             <p className="text-gray-600">カップル・ご家族での体験も大歓迎です</p>
           </div>
-          <div className="overflow-x-auto">
-            <div className="flex gap-6 pb-4" style={{ minWidth: 'fit-content' }}>
-              {experienceLocations.slice(0, 5).map((location) => (
-                <div key={location.id} className="flex-none w-80">
+          
+          <div className="bg-white rounded-lg shadow-sm mb-8 overflow-hidden">
+            <div className="p-4 border-b">
+              <h3 className="text-lg font-semibold text-gray-800">地図で探す</h3>
+              <p className="text-sm text-gray-600">お近くの体験スポットを見つけましょう</p>
+            </div>
+            <div className="aspect-[16/9] bg-gray-100">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d206314.3648746749!2d137.13756495!3d36.695932799999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x5ff78e1a1bfe21bb%3A0x7b4d4c8f5a3c8e9d!2z5bul5bGx55yM!5e0!3m2!1sja!2sjp!4v1642742069000!5m2!1sja!2sjp"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen=""
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="富山県内の体験場所マップ"
+              ></iframe>
+            </div>
+            <div className="p-4 bg-gray-50">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-gray-600">マップ上のピンをクリックして詳細をご確認ください</span>
+                <Link href="/locations" className="text-emerald-600 hover:text-emerald-700 font-medium">
+                  体験場所一覧を見る →
+                </Link>
+              </div>
+            </div>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {experienceLocations.slice(0, 6).map((location) => (
+              <div key={location.id}>
                   <Link href={`/locations/${location.id}`}>
                     <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition p-6 cursor-pointer border">
                   <div className="aspect-[16/9] relative mb-4 bg-gray-100 rounded-lg overflow-hidden">
@@ -472,7 +456,6 @@ export default function Home() {
                   </Link>
                 </div>
               ))}
-            </div>
           </div>
           <div className="text-center mt-8">
             <Link

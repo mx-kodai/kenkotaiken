@@ -19,7 +19,6 @@ export default function EventsPage() {
     if (selectedFilter === 'all') return true;
     if (selectedFilter === 'weekend') return event.isWeekendEvent;
     if (selectedFilter === 'weekday') return !event.isWeekendEvent;
-    if (selectedFilter === 'free') return event.price === 0;
     if (selectedFilter === 'no-reservation') return !event.registrationRequired;
     return true;
   });
@@ -28,7 +27,6 @@ export default function EventsPage() {
     { value: 'all', label: 'すべて' },
     { value: 'weekend', label: '土日開催' },
     { value: 'weekday', label: '平日開催' },
-    { value: 'free', label: '無料' },
     { value: 'no-reservation', label: '予約不要' }
   ];
 

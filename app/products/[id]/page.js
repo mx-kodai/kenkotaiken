@@ -140,15 +140,9 @@ export default function ProductDetailPage({ params }) {
 
               <div className="space-y-4 mb-8">
                 <div className="flex items-center gap-2">
-                  {product.price === 0 ? (
-                    <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
-                      無料体験
-                    </span>
-                  ) : (
-                    <span className="text-2xl font-bold text-gray-800">
-                      ¥{product.price?.toLocaleString()}
-                    </span>
-                  )}
+                  <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
+                    無料体験
+                  </span>
                 </div>
 
                 <div className="flex items-center gap-2">

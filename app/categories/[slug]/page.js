@@ -34,7 +34,7 @@ export default function CategoryPage({ params }) {
     filteredProducts = filteredProducts.filter(product => {
       switch (selectedFilter) {
         case 'free':
-          return product.price === 0 || product.experienceType.includes('visit');
+          return true;
         case 'highly_rated':
           return product.rating >= 4.5;
         case 'couple_friendly':

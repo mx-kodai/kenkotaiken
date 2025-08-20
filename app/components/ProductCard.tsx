@@ -104,11 +104,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 </span>
               )}
             </div>
-            {product.price === 0 ? (
-              <span className="text-green-600 font-semibold">無料</span>
-            ) : product.price && (
-              <span className="text-gray-700">¥{product.price.toLocaleString()}</span>
-            )}
+            <span className="text-green-600 font-semibold">無料</span>
           </div>
         </div>
       </div>
