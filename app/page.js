@@ -1,47 +1,54 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Search, MapPin, Sparkles, Users, Heart, ChevronRight, Play, Calendar, Star, Clock, AlertCircle, Zap, Activity, Shield, Dumbbell, Stethoscope, Brain, Target, Smile } from 'lucide-react';
+import { Search, MapPin, Sparkles, Users, Heart, ChevronRight, Play, Calendar, Star, Clock, AlertCircle, Zap, Activity, Shield, Dumbbell, Stethoscope, Brain, Target, Smile, ChevronDown, X } from 'lucide-react';
 import ProductCard from './components/ProductCard';
 import { products, categories, experienceLocations, experienceReports, experienceEvents } from './data/mockData';
 
 export default function Home() {
+  const [expandedCategory, setExpandedCategory] = useState(null);
+
+  const handleCategoryClick = (categoryId) => {
+    setExpandedCategory(expandedCategory === categoryId ? null : categoryId);
+  };
+
   return (
     <div>
-      <section className="bg-gradient-to-br from-emerald-50 via-white to-blue-50 py-20">
+      <section className="bg-gradient-to-br from-emerald-50 via-white to-blue-50 py-12 md:py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
-              健康デバイスを
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-4 md:mb-6 leading-tight">
+              健康デバイスを<br className="md:hidden" />
               <span className="text-emerald-500">無料で体験</span>
             </h1>
-            <p className="text-lg text-gray-600 mb-8">
-              高価な健康機器も、まずは試してから。
+            <p className="text-base md:text-lg text-gray-600 mb-6 md:mb-8 px-2">
+              高価な健康機器も、まずは試してから。<br className="hidden sm:inline" />
               全国の体験スポットで、あなたにぴったりのソリューションを見つけましょう
             </p>
             
-            <div className="flex flex-col md:flex-row gap-4 justify-center mb-8">
+            <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center mb-6 md:mb-8 px-2">
               <div className="relative flex-1 max-w-md">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
                 <input
                   type="text"
                   placeholder="商品名や悩みで検索..."
-                  className="w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm md:text-base"
                 />
               </div>
-              <button className="bg-emerald-500 text-white px-6 py-3 rounded-lg hover:bg-emerald-600 transition font-medium">
+              <button className="bg-emerald-500 text-white px-6 py-3 rounded-lg hover:bg-emerald-600 transition font-medium text-sm md:text-base whitespace-nowrap">
                 検索する
               </button>
             </div>
 
-            <div className="flex flex-wrap gap-2 justify-center">
-              <span className="text-sm text-gray-500">人気のキーワード:</span>
+            <div className="flex flex-wrap gap-2 justify-center px-2">
+              <span className="text-xs md:text-sm text-gray-500 mb-1">人気のキーワード:</span>
               {['マッサージチェア', '睡眠改善', 'フィットネス', '肩こり'].map((keyword) => (
                 <Link
                   key={keyword}
                   href={`/search?q=${keyword}`}
-                  className="text-sm bg-white px-3 py-1 rounded-full border hover:border-emerald-500 transition text-gray-700"
+                  className="text-xs md:text-sm bg-white px-2 md:px-3 py-1 rounded-full border hover:border-emerald-500 transition text-gray-700"
                 >
                   {keyword}
                 </Link>
@@ -55,8 +62,7 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
             <div className="inline-flex items-center gap-2 bg-pink-500 text-white px-4 py-2 rounded-full text-sm font-medium mb-4">
-              <AlertCircle className="h-4 w-4" />
-              期間限定開催中！
+              期間限定開催中
             </div>
             <h2 className="text-2xl font-bold text-gray-800 mb-2">
               ショッピングモールで健康体験イベント
@@ -66,8 +72,9 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            {experienceEvents.slice(0, 3).map((event) => {
+          <div className="overflow-x-auto mb-8">
+            <div className="flex md:grid md:grid-cols-2 lg:grid-cols-3 gap-6" style={{ minWidth: 'fit-content' }}>
+              {experienceEvents.slice(0, 6).map((event) => {
               const today = new Date();
               const isUpcoming = event.startDate >= today;
               const formatDate = (date) => date.toLocaleDateString('ja-JP', { 
@@ -78,7 +85,7 @@ export default function Home() {
 
               return (
                 <Link key={event.id} href={`/events/${event.id}`}>
-                  <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition overflow-hidden cursor-pointer">
+                  <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition overflow-hidden cursor-pointer flex-none w-80 md:w-auto">
                     <div className="aspect-video relative bg-gray-100">
                       <Image
                         src={event.images[0]}
@@ -156,6 +163,7 @@ export default function Home() {
                 </Link>
               );
             })}
+            </div>
           </div>
 
           <div className="text-center">
@@ -223,10 +231,14 @@ export default function Home() {
             </Link>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {products.slice(0, 6).map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
+          <div className="overflow-x-auto">
+            <div className="flex gap-6 pb-4" style={{ minWidth: 'fit-content' }}>
+              {products.slice(0, 8).map((product) => (
+                <div key={product.id} className="flex-none w-72">
+                  <ProductCard product={product} />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -260,10 +272,14 @@ export default function Home() {
             </div>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {products.filter(p => p.tags.includes('カップル限定') || p.tags.includes('ファミリー') || p.tags.includes('富山県民限定')).slice(0, 6).map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
+          <div className="overflow-x-auto">
+            <div className="flex gap-6 pb-4" style={{ minWidth: 'fit-content' }}>
+              {products.filter(p => p.tags.includes('カップル限定') || p.tags.includes('ファミリー') || p.tags.includes('富山県民限定')).slice(0, 8).map((product) => (
+                <div key={product.id} className="flex-none w-72">
+                  <ProductCard product={product} />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -271,27 +287,72 @@ export default function Home() {
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <h2 className="text-2xl font-bold text-center mb-8 text-gray-800">カテゴリーから探す</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 max-w-4xl mx-auto mb-6">
             {categories.slice(0, 6).map((category, index) => {
               const icons = [Zap, Activity, Shield, Dumbbell, Stethoscope];
               const IconComponent = icons[index] || Brain;
+              const categoryProducts = products.filter(product => product.category.id === category.id);
               
               return (
-                <Link
+                <button
                   key={category.id}
-                  href={`/categories/${category.slug}`}
-                  className="group"
+                  onClick={() => handleCategoryClick(category.id)}
+                  className="group text-center p-4 rounded-lg bg-white hover:bg-emerald-50 transition shadow-sm border"
                 >
-                  <div className="text-center p-6 rounded-lg bg-white hover:bg-emerald-50 transition shadow-sm border">
-                    <div className="w-12 h-12 bg-emerald-100 rounded-full mx-auto mb-3 group-hover:bg-emerald-200 transition flex items-center justify-center">
-                      <IconComponent className="h-6 w-6 text-emerald-600" />
-                    </div>
-                    <p className="text-sm font-medium text-gray-700">{category.name}</p>
+                  <div className="w-12 h-12 bg-emerald-100 rounded-full mx-auto mb-3 group-hover:bg-emerald-200 transition flex items-center justify-center">
+                    <IconComponent className="h-6 w-6 text-emerald-600" />
                   </div>
-                </Link>
+                  <p className="text-sm font-medium text-gray-700">{category.name}</p>
+                  <p className="text-xs text-gray-500 mt-1">{categoryProducts.length}件</p>
+                </button>
               );
             })}
           </div>
+          
+          {expandedCategory && (
+            <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-sm border p-6">
+              {(() => {
+                const category = categories.find(c => c.id === expandedCategory);
+                const categoryProducts = products.filter(product => product.category.id === expandedCategory);
+                
+                return (
+                  <div>
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-lg font-semibold text-gray-800">{category?.name}の商品</h3>
+                      <button
+                        onClick={() => setExpandedCategory(null)}
+                        className="text-gray-400 hover:text-gray-600"
+                      >
+                        <X className="h-5 w-5" />
+                      </button>
+                    </div>
+                    {categoryProducts.length > 0 ? (
+                      <div className="overflow-x-auto">
+                        <div className="flex gap-4 pb-2" style={{ minWidth: 'fit-content' }}>
+                          {categoryProducts.slice(0, 8).map((product) => (
+                            <div key={product.id} className="flex-none w-64">
+                              <ProductCard product={product} />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-gray-500 text-center py-8">このカテゴリの商品は準備中です</p>
+                    )}
+                    <div className="text-center mt-4">
+                      <Link
+                        href={`/categories/${category?.slug}`}
+                        className="inline-flex items-center text-emerald-600 hover:text-emerald-700 text-sm font-medium"
+                      >
+                        このカテゴリの商品をすべて見る
+                        <ChevronRight className="h-4 w-4 ml-1" />
+                      </Link>
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
+          )}
         </div>
       </section>
 
@@ -323,9 +384,10 @@ export default function Home() {
             </Link>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {experienceReports.slice(0, 6).map((report) => (
-              <div key={report.id}>
+          <div className="overflow-x-auto">
+            <div className="flex gap-6 pb-4" style={{ minWidth: 'fit-content' }}>
+              {experienceReports.slice(0, 8).map((report) => (
+                <div key={report.id} className="flex-none w-80">
                   <Link href={`/reports/${report.id}`}>
                     <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition overflow-hidden cursor-pointer">
                   <div className="aspect-video relative bg-gray-100">
@@ -347,7 +409,7 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <div className="p-4">
+                  <div className="p-4 h-44 flex flex-col">
                     <div className="flex items-center gap-2 mb-2">
                       <div className="w-6 h-6 rounded-full bg-gray-200 overflow-hidden">
                         <Image
@@ -358,12 +420,12 @@ export default function Home() {
                           className="object-cover"
                         />
                       </div>
-                      <span className="text-xs text-gray-600">
+                      <span className="text-xs text-gray-600 truncate">
                         {report.reviewer.name} • {report.reviewer.age} • {report.reviewer.city}
                       </span>
                     </div>
 
-                    <h3 className="font-bold text-gray-800 mb-2 line-clamp-2">
+                    <h3 className="font-bold text-gray-800 mb-2 line-clamp-2 min-h-[2.5rem]">
                       {report.title}
                     </h3>
 
@@ -382,7 +444,7 @@ export default function Home() {
                       </span>
                     </div>
 
-                      <p className="text-sm text-gray-600 line-clamp-2">
+                      <p className="text-sm text-gray-600 line-clamp-3 flex-1">
                         {report.description}
                       </p>
                     </div>
@@ -390,6 +452,7 @@ export default function Home() {
                   </Link>
                 </div>
               ))}
+            </div>
           </div>
         </div>
       </section>
@@ -427,9 +490,10 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {experienceLocations.slice(0, 6).map((location) => (
-              <div key={location.id}>
+          <div className="overflow-x-auto">
+            <div className="flex gap-6 pb-4" style={{ minWidth: 'fit-content' }}>
+              {experienceLocations.slice(0, 8).map((location) => (
+                <div key={location.id} className="flex-none w-80">
                   <Link href={`/locations/${location.id}`}>
                     <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition p-6 cursor-pointer border">
                   <div className="aspect-[16/9] relative mb-4 bg-gray-100 rounded-lg overflow-hidden">
@@ -456,6 +520,7 @@ export default function Home() {
                   </Link>
                 </div>
               ))}
+            </div>
           </div>
           <div className="text-center mt-8">
             <Link

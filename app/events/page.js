@@ -57,7 +57,7 @@ export default function EventsPage() {
             </p>
             <div className="bg-white/20 rounded-lg p-4 inline-block">
               <p className="text-white font-semibold">
-                🛍️ ショッピングついでに健康体験 🛍️
+                ショッピングついでに健康体験
               </p>
             </div>
           </div>
@@ -222,7 +222,7 @@ export default function EventsPage() {
         <div className="mt-12 bg-gradient-to-r from-pink-100 to-orange-100 rounded-lg p-8">
           <div className="text-center">
             <h2 className="text-2xl font-bold text-gray-800 mb-4">
-              🛍️ ショッピングモールでの健康体験の魅力
+              ショッピングモールでの健康体験の魅力
             </h2>
             <div className="grid md:grid-cols-3 gap-6">
               <div className="bg-white p-4 rounded-lg">
