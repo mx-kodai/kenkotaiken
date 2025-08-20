@@ -50,13 +50,13 @@ export default function EventsPage() {
       <div className="bg-gradient-to-r from-pink-500 to-orange-500 text-white">
         <div className="container mx-auto px-4 py-16">
           <div className="text-center max-w-3xl mx-auto">
-            <h1 className="text-4xl font-bold mb-4 text-white">期間限定イベント</h1>
+            <h1 className="text-4xl font-bold mb-4">期間限定イベント</h1>
             <p className="text-lg text-white/90 mb-6">
               富山県内のショッピングモールで開催される特別な健康体験イベント！
               お買い物ついでにカップル・ご家族でお気軽にどうぞ
             </p>
             <div className="bg-white/20 rounded-lg p-4 inline-block">
-              <p className="text-white font-semibold">
+              <p className="font-semibold">
                 ショッピングついでに健康体験
               </p>
             </div>

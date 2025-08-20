@@ -63,7 +63,7 @@ export default function Header() {
               <Search className="h-5 w-5 text-gray-600" />
             </button>
             
-            <div className="hidden md:relative">
+            <div className="relative hidden md:block">
               <button
                 onClick={() => setIsPrefectureOpen(!isPrefectureOpen)}
                 className="flex items-center space-x-1 text-gray-600 hover:text-emerald-500 transition"

@@ -52,7 +52,7 @@ function SearchPageContent() {
       <div className="bg-gradient-to-r from-emerald-400 to-blue-500 text-white">
         <div className="container mx-auto px-4 py-16">
           <div className="max-w-2xl mx-auto text-center">
-            <h1 className="text-4xl font-bold mb-4 text-white">検索結果</h1>
+            <h1 className="text-4xl font-bold mb-4">検索結果</h1>
             <p className="text-lg text-white/90 mb-8">
               あなたにぴったりの健康体験を見つけましょう
             </p>

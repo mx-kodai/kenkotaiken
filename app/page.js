@@ -4,31 +4,66 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Search, MapPin, Sparkles, Users, Heart, ChevronRight, Play, Calendar, Star, Clock, AlertCircle, Zap, Activity, Shield, Dumbbell, Stethoscope, Brain, Target, Smile, ChevronDown, X } from 'lucide-react';
+import { motion } from 'framer-motion';
 import ProductCard from './components/ProductCard';
+import AnimatedSection from './components/AnimatedSection';
+import AnimatedCard from './components/AnimatedCard';
 import { products, categories, experienceLocations, experienceReports, experienceEvents } from './data/mockData';
 
 export default function Home() {
   const [expandedCategory, setExpandedCategory] = useState(null);
+  const [selectedPrefecture, setSelectedPrefecture] = useState('富山県');
 
   const handleCategoryClick = (categoryId) => {
     setExpandedCategory(expandedCategory === categoryId ? null : categoryId);
   };
+
+  // 都道府県別のコンテンツ設定
+  const locationContent = {
+    '富山県': {
+      heroTitle: '富山県民のための<br class="md:hidden" /><span class="text-emerald-500">無料健康体験</span>',
+      heroSubtitle: '血圧計・マッサージ機器・フィットネス器具を、購入前に無料で体験。<br class="hidden sm:inline" />富山県内のお馴染みの店舗で、あなたの健康をサポートします',
+      eventLocations: 'ファボーレ・イオンモール高岡などで開催！お買い物ついでに気軽にどうぞ',
+      mapTitle: '富山県内の体験場所',
+      mapIframeSrc: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d206314.3648746749!2d137.13756495!3d36.695932799999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x5ff78e1a1bfe21bb%3A0x7b4d4c8f5a3c8e9d!2z5bul5bGx55yM!5e0!3m2!1sja!2sjp!4v1642742069000!5m2!1sja!2sjp'
+    },
+    '東京都': {
+      heroTitle: '東京都民のための<br class="md:hidden" /><span class="text-emerald-500">無料健康体験</span>',
+      heroSubtitle: '血圧計・マッサージ機器・フィットネス器具を、購入前に無料で体験。<br class="hidden sm:inline" />東京都内の体験スポットで、あなたの健康をサポートします',
+      eventLocations: '渋谷・新宿・池袋などのショッピングモールで開催予定！',
+      mapTitle: '東京都内の体験場所',
+      mapIframeSrc: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3240.8280103854647!2d139.6922!3d35.6895!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzXCsDQxJzIyLjIiTiAxMznCsDQxJzMyLjAiRQ!!5e0!3m2!1sja!2sjp!4v1642742069001!5m2!1sja!2sjp'
+    }
+  };
+
+  const currentContent = locationContent[selectedPrefecture] || locationContent['富山県'];
 
   return (
     <div>
       <section className="bg-gradient-to-br from-emerald-50 via-white to-blue-50 py-12 md:py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-4 md:mb-6 leading-tight">
-              健康デバイスを<br className="md:hidden" />
-              <span className="text-emerald-500">無料で体験</span>
-            </h1>
-            <p className="text-base md:text-lg text-gray-600 mb-6 md:mb-8 px-2">
-              高価な健康機器も、まずは試してから。<br className="hidden sm:inline" />
-              全国の体験スポットで、あなたにぴったりのソリューションを見つけましょう
-            </p>
+            <motion.h1 
+              className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-4 md:mb-6 leading-tight" 
+              dangerouslySetInnerHTML={{ __html: currentContent.heroTitle }}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: [0.25, 0.25, 0.25, 0.75] }}
+            />
+            <motion.p 
+              className="text-base md:text-lg text-gray-600 mb-6 md:mb-8 px-2" 
+              dangerouslySetInnerHTML={{ __html: currentContent.heroSubtitle }}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.25, 0.25, 0.75] }}
+            />
             
-            <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center mb-6 md:mb-8 px-2">
+            <motion.div 
+              className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center mb-6 md:mb-8 px-2"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
               <div className="relative flex-1 max-w-md">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
                 <input
@@ -37,40 +72,72 @@ export default function Home() {
                   className="w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm md:text-base"
                 />
               </div>
-              <button className="bg-emerald-500 text-white px-6 py-3 rounded-lg hover:bg-emerald-600 transition font-medium text-sm md:text-base whitespace-nowrap">
+              <motion.button 
+                className="bg-emerald-500 text-white px-6 py-3 rounded-lg hover:bg-emerald-600 transition font-medium text-sm md:text-base whitespace-nowrap"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
                 検索する
-              </button>
-            </div>
+              </motion.button>
+            </motion.div>
 
-            <div className="flex flex-wrap gap-2 justify-center px-2">
-              <span className="text-xs md:text-sm text-gray-500 mb-1">人気のキーワード:</span>
-              {['マッサージチェア', '睡眠改善', 'フィットネス', '肩こり'].map((keyword) => (
-                <Link
+            <motion.div 
+              className="flex flex-wrap items-center gap-2 justify-center px-2"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+            >
+              <span className="text-xs md:text-sm text-gray-500">富山県民の人気:</span>
+              {['血圧計', 'マッサージチェア', '肩こり・腰痛', 'ウォーキング', '健康測定', '温泉療法'].map((keyword, index) => (
+                <motion.div
                   key={keyword}
-                  href={`/search?q=${keyword}`}
-                  className="text-xs md:text-sm bg-white px-2 md:px-3 py-1 rounded-full border hover:border-emerald-500 transition text-gray-700"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3, delay: 0.7 + (index * 0.1) }}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
                 >
-                  {keyword}
-                </Link>
+                  <Link
+                    href={`/search?q=${keyword}`}
+                    className="text-xs md:text-sm bg-white px-3 py-1.5 rounded-full border border-gray-200 hover:border-emerald-500 hover:bg-emerald-50 transition text-gray-700"
+                  >
+                    {keyword}
+                  </Link>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      <section className="py-16 bg-gradient-to-r from-pink-50 to-orange-50">
+      <AnimatedSection className="py-16 bg-gradient-to-r from-pink-50 to-orange-50">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center gap-2 bg-pink-500 text-white px-4 py-2 rounded-full text-sm font-medium mb-4">
+          <motion.div 
+            className="text-center mb-8"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <motion.div 
+              className="inline-flex items-center gap-2 bg-pink-500 text-white px-4 py-2 rounded-full text-sm font-medium mb-4"
+              whileHover={{ scale: 1.05 }}
+              animate={{ 
+                boxShadow: ["0 0 0 0 rgba(236, 72, 153, 0)", "0 0 0 10px rgba(236, 72, 153, 0.1)", "0 0 0 0 rgba(236, 72, 153, 0)"]
+              }}
+              transition={{ 
+                boxShadow: { duration: 2, repeat: Infinity, repeatDelay: 3 }
+              }}
+            >
               期間限定開催中
-            </div>
+            </motion.div>
             <h2 className="text-2xl font-bold text-gray-800 mb-2">
               ショッピングモールで健康体験イベント
             </h2>
             <p className="text-gray-600">
-              ファボーレ・イオンモール高岡などで開催！お買い物ついでに気軽にどうぞ
+              {currentContent.eventLocations}
             </p>
-          </div>
+          </motion.div>
 
           <div className="overflow-x-auto mb-8">
             <div className="flex md:grid md:grid-cols-2 lg:grid-cols-3 gap-6" style={{ minWidth: 'fit-content' }}>
@@ -84,8 +151,9 @@ export default function Home() {
               });
 
               return (
-                <Link key={event.id} href={`/events/${event.id}`}>
-                  <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition overflow-hidden cursor-pointer flex-none w-80 md:w-auto">
+                <AnimatedCard key={event.id} index={experienceEvents.slice(0, 6).indexOf(event)}>
+                  <Link href={`/events/${event.id}`}>
+                    <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition overflow-hidden cursor-pointer flex-none w-80 md:w-auto">
                     <div className="aspect-video relative bg-gray-100">
                       <Image
                         src={event.images[0]}
@@ -159,8 +227,9 @@ export default function Home() {
                         )}
                       </div>
                     </div>
-                  </div>
-                </Link>
+                    </div>
+                  </Link>
+                </AnimatedCard>
               );
             })}
             </div>
@@ -176,52 +245,9 @@ export default function Home() {
             </Link>
           </div>
         </div>
-      </section>
+      </AnimatedSection>
 
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <h2 className="text-2xl font-bold text-center mb-12 text-gray-800">体験方法を選ぶ</h2>
-          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            <Link href="/locations" className="group">
-              <div className="text-center p-6 rounded-lg border hover:border-emerald-500 transition">
-                <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-emerald-200 transition">
-                  <MapPin className="h-8 w-8 text-emerald-600" />
-                </div>
-                <h3 className="font-semibold mb-2">店舗で体験</h3>
-                <p className="text-sm text-gray-600">
-                  お近くの体験センターで実際に試せます
-                </p>
-              </div>
-            </Link>
-            
-            <div className="group cursor-pointer">
-              <div className="text-center p-6 rounded-lg border hover:border-emerald-500 transition">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-blue-200 transition">
-                  <Sparkles className="h-8 w-8 text-blue-600" />
-                </div>
-                <h3 className="font-semibold mb-2">自宅でお試し</h3>
-                <p className="text-sm text-gray-600">
-                  配送してもらい、自宅でゆっくり体験
-                </p>
-              </div>
-            </div>
-            
-            <div className="group cursor-pointer">
-              <div className="text-center p-6 rounded-lg border hover:border-emerald-500 transition">
-                <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-purple-200 transition">
-                  <Users className="h-8 w-8 text-purple-600" />
-                </div>
-                <h3 className="font-semibold mb-2">オンライン相談</h3>
-                <p className="text-sm text-gray-600">
-                  専門スタッフがオンラインでサポート
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 bg-gray-50">
+      <AnimatedSection className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl font-bold text-gray-800">人気の体験商品</h2>
@@ -241,55 +267,14 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </AnimatedSection>
 
-
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <h2 className="text-2xl font-bold text-center mb-8 text-gray-800">カップル・ご家族での体験も大歓迎</h2>
-          <div className="mb-6">
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              <div className="bg-gradient-to-r from-pink-100 to-purple-100 rounded-lg p-6 text-center">
-                <Heart className="h-8 w-8 text-pink-500 mx-auto mb-3" />
-                <h3 className="font-bold text-gray-800 mb-2">カップル体験</h3>
-                <p className="text-sm text-gray-600">富山ウェルネスパーク高岡でペア体験。マッサージチェアやフィットネスを二人で楽しめます</p>
-              </div>
-              <div className="bg-gradient-to-r from-blue-100 to-cyan-100 rounded-lg p-6 text-center">
-                <Users className="h-8 w-8 text-blue-500 mx-auto mb-3" />
-                <h3 className="font-bold text-gray-800 mb-2">ファミリー体験</h3>
-                <p className="text-sm text-gray-600">ファボーレでの親子健康チェック。お子様の成長測定と健康デバイス体験を一緒に</p>
-              </div>
-              <div className="bg-gradient-to-r from-green-100 to-emerald-100 rounded-lg p-6 text-center">
-                <Target className="h-8 w-8 text-green-500 mx-auto mb-3" />
-                <h3 className="font-bold text-gray-800 mb-2">富山県民特典</h3>
-                <p className="text-sm text-gray-600">県民証提示で体験料無料。立山町健康センターでの温泉×健康機器コラボ体験</p>
-              </div>
-              <div className="bg-gradient-to-r from-orange-100 to-yellow-100 rounded-lg p-6 text-center">
-                <Smile className="h-8 w-8 text-orange-500 mx-auto mb-3" />
-                <h3 className="font-bold text-gray-800 mb-2">気軽に参加</h3>
-                <p className="text-sm text-gray-600">予約不要で当日参加OK。イオンモール高岡でのお買い物ついでに健康体験</p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="overflow-x-auto">
-            <div className="flex gap-6 pb-4" style={{ minWidth: 'fit-content' }}>
-              {products.filter(p => p.tags.includes('カップル限定') || p.tags.includes('ファミリー') || p.tags.includes('富山県民限定')).slice(0, 8).map((product) => (
-                <div key={product.id} className="flex-none w-72">
-                  <ProductCard product={product} />
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 bg-gray-50">
+      <AnimatedSection className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <h2 className="text-2xl font-bold text-center mb-8 text-gray-800">カテゴリーから探す</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 max-w-4xl mx-auto mb-6">
+          <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
             {categories.slice(0, 6).map((category, index) => {
-              const icons = [Zap, Activity, Shield, Dumbbell, Stethoscope];
+              const icons = [Zap, Activity, Shield, Dumbbell, Stethoscope, Brain];
               const IconComponent = icons[index] || Brain;
               const categoryProducts = products.filter(product => product.category.id === category.id);
               
@@ -297,20 +282,24 @@ export default function Home() {
                 <button
                   key={category.id}
                   onClick={() => handleCategoryClick(category.id)}
-                  className="group text-center p-4 rounded-lg bg-white hover:bg-emerald-50 transition shadow-sm border"
+                  className={`group flex flex-col items-center p-4 rounded-lg bg-white hover:bg-emerald-50 hover:shadow-md transition-all border ${
+                    expandedCategory === category.id ? 'border-emerald-500 bg-emerald-50' : 'border-gray-200 hover:border-emerald-300'
+                  }`}
                 >
-                  <div className="w-12 h-12 bg-emerald-100 rounded-full mx-auto mb-3 group-hover:bg-emerald-200 transition flex items-center justify-center">
+                  <div className="w-12 h-12 bg-emerald-100 rounded-full mb-3 group-hover:bg-emerald-200 transition flex items-center justify-center">
                     <IconComponent className="h-6 w-6 text-emerald-600" />
                   </div>
-                  <p className="text-sm font-medium text-gray-700">{category.name}</p>
+                  <p className="text-sm font-medium text-gray-700 text-center">{category.name}</p>
                   <p className="text-xs text-gray-500 mt-1">{categoryProducts.length}件</p>
                 </button>
               );
             })}
           </div>
-          
-          {expandedCategory && (
-            <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-sm border p-6">
+        </div>
+        
+        {expandedCategory && (
+          <div className="bg-white mt-6">
+            <div className="container mx-auto px-4 py-6">
               {(() => {
                 const category = categories.find(c => c.id === expandedCategory);
                 const categoryProducts = products.filter(product => product.category.id === expandedCategory);
@@ -321,16 +310,16 @@ export default function Home() {
                       <h3 className="text-lg font-semibold text-gray-800">{category?.name}の商品</h3>
                       <button
                         onClick={() => setExpandedCategory(null)}
-                        className="text-gray-400 hover:text-gray-600"
+                        className="text-gray-400 hover:text-gray-600 transition p-1"
                       >
                         <X className="h-5 w-5" />
                       </button>
                     </div>
                     {categoryProducts.length > 0 ? (
                       <div className="overflow-x-auto">
-                        <div className="flex gap-4 pb-2" style={{ minWidth: 'fit-content' }}>
+                        <div className="flex gap-6 pb-4" style={{ minWidth: 'fit-content' }}>
                           {categoryProducts.slice(0, 8).map((product) => (
-                            <div key={product.id} className="flex-none w-64">
+                            <div key={product.id} className="flex-none w-72">
                               <ProductCard product={product} />
                             </div>
                           ))}
@@ -342,9 +331,9 @@ export default function Home() {
                     <div className="text-center mt-4">
                       <Link
                         href={`/categories/${category?.slug}`}
-                        className="inline-flex items-center text-emerald-600 hover:text-emerald-700 text-sm font-medium"
+                        className="inline-flex items-center text-emerald-600 hover:text-emerald-700 font-medium"
                       >
-                        このカテゴリの商品をすべて見る
+                        {category?.name}の商品をすべて見る
                         <ChevronRight className="h-4 w-4 ml-1" />
                       </Link>
                     </div>
@@ -352,11 +341,11 @@ export default function Home() {
                 );
               })()}
             </div>
-          )}
-        </div>
-      </section>
+          </div>
+        )}
+      </AnimatedSection>
 
-      <section className="py-16 bg-gradient-to-r from-emerald-500 to-blue-500">
+      <AnimatedSection className="py-16 bg-gradient-to-r from-emerald-500 to-blue-500">
         <div className="container mx-auto px-4 text-center">
           <Heart className="h-12 w-12 mx-auto mb-4 text-white" />
           <h2 className="text-3xl font-bold mb-4 text-white">
@@ -372,9 +361,9 @@ export default function Home() {
             診断を始める
           </Link>
         </div>
-      </section>
+      </AnimatedSection>
 
-      <section className="py-16 bg-gray-50">
+      <AnimatedSection className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl font-bold text-gray-800">みんなの体験レポート</h2>
@@ -455,12 +444,12 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </AnimatedSection>
 
-      <section className="py-16 bg-white">
+      <AnimatedSection className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">富山県内の体験場所</h2>
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">{currentContent.mapTitle}</h2>
             <p className="text-gray-600">カップル・ご家族での体験も大歓迎です</p>
           </div>
           
@@ -471,14 +460,14 @@ export default function Home() {
             </div>
             <div className="aspect-[16/9] bg-gray-100">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d206314.3648746749!2d137.13756495!3d36.695932799999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x5ff78e1a1bfe21bb%3A0x7b4d4c8f5a3c8e9d!2z5bul5bGx55yM!5e0!3m2!1sja!2sjp!4v1642742069000!5m2!1sja!2sjp"
+                src={currentContent.mapIframeSrc}
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
                 allowFullScreen=""
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                title="富山県内の体験場所マップ"
+                title={`${currentContent.mapTitle}マップ`}
               ></iframe>
             </div>
             <div className="p-4 bg-gray-50">
@@ -531,7 +520,7 @@ export default function Home() {
             </Link>
           </div>
         </div>
-      </section>
+      </AnimatedSection>
     </div>
   );
 }
