@@ -427,6 +427,7 @@ export default function Home() {
                         {report.description}
                       </p>
                     </div>
+                  </div>
                   </Link>
                 </div>
               ))}
@@ -467,6 +468,7 @@ export default function Home() {
                       <span className="text-xs text-purple-600">家族歓迎</span>
                     </div>
                     </div>
+                  </div>
                   </Link>
                 </div>
               ))}
