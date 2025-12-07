@@ -3,14 +3,22 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowLeft, Star, Heart, MapPin, Phone, Clock, Users, Share2, Calendar, CheckCircle, Info } from 'lucide-react';
+import { ArrowLeft, Star, Heart, MapPin, Phone, Clock, Users, Share2, Calendar, CheckCircle, Info, ThumbsUp, Loader2 } from 'lucide-react';
 import ProductCard from '../../components/ProductCard';
 import { products, experienceLocations } from '../../data/mockData';
+import { useLikes, useFavorites } from '../../hooks/useFavorites';
+import { useShare } from '../../hooks/useShare';
+import { useReviews } from '../../hooks/useReviews';
 
 export default function ProductDetailPage({ params }) {
-  const [liked, setLiked] = useState(false);
   const [selectedImage, setSelectedImage] = useState(0);
   const [activeTab, setActiveTab] = useState('overview');
+
+  // フック接続
+  const { isLiked, likeCount, toggleLike, isLoading: likeLoading } = useLikes(params.id, 'product');
+  const { isFavorite, toggleFavorite, isLoading: favoriteLoading } = useFavorites(params.id, 'product');
+  const { shareToTwitter, shareToFacebook, shareToLine, copyLink, isSharing } = useShare();
+  const { reviews, isLoading: reviewsLoading, markHelpful, hasMarkedHelpful } = useReviews(params.id, 'product');
   
   const product = products.find(p => p.id === params.id);
   
@@ -35,8 +43,33 @@ export default function ProductDetailPage({ params }) {
     .filter(p => p.id !== product.id && p.category.id === product.category.id)
     .slice(0, 4);
 
+  // いいね処理
   const handleLike = () => {
-    setLiked(!liked);
+    toggleLike();
+  };
+
+  // シェア処理
+  const handleShare = (platform) => {
+    const shareData = {
+      title: product.name,
+      text: product.description.slice(0, 100) + '...',
+      url: typeof window !== 'undefined' ? window.location.href : '',
+    };
+
+    switch (platform) {
+      case 'twitter':
+        shareToTwitter(shareData);
+        break;
+      case 'facebook':
+        shareToFacebook(shareData);
+        break;
+      case 'line':
+        shareToLine(shareData);
+        break;
+      case 'copy':
+        copyLink(shareData.url);
+        break;
+    }
   };
 
   const tabs = [
@@ -111,16 +144,26 @@ export default function ProductDetailPage({ params }) {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={handleLike}
-                    className={`p-2 rounded-full transition ${
-                      liked ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-600 hover:bg-red-50'
+                    disabled={likeLoading}
+                    className={`p-2 rounded-full transition flex items-center gap-1 ${
+                      isLiked ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-600 hover:bg-red-50'
                     }`}
                   >
-                    <Heart className={`h-5 w-5 ${liked ? 'fill-current' : ''}`} />
+                    <Heart className={`h-5 w-5 ${isLiked ? 'fill-current' : ''}`} />
+                    {likeCount > 0 && <span className="text-sm">{likeCount}</span>}
                   </button>
-                  
-                  <button className="p-2 bg-gray-100 text-gray-600 rounded-full hover:bg-gray-200 transition">
-                    <Share2 className="h-5 w-5" />
-                  </button>
+
+                  <div className="relative group">
+                    <button className="p-2 bg-gray-100 text-gray-600 rounded-full hover:bg-gray-200 transition">
+                      <Share2 className="h-5 w-5" />
+                    </button>
+                    <div className="absolute right-0 top-full mt-2 bg-white rounded-lg shadow-lg border p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10 min-w-[120px]">
+                      <button onClick={() => handleShare('twitter')} className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 rounded">Twitter</button>
+                      <button onClick={() => handleShare('facebook')} className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 rounded">Facebook</button>
+                      <button onClick={() => handleShare('line')} className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 rounded">LINE</button>
+                      <button onClick={() => handleShare('copy')} className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 rounded">URLコピー</button>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -173,8 +216,17 @@ export default function ProductDetailPage({ params }) {
                 >
                   体験場所を見る
                 </Link>
-                <button className="flex-1 border border-emerald-500 text-emerald-600 px-6 py-3 rounded-lg hover:bg-emerald-50 transition font-medium">
-                  お気に入りに追加
+                <button
+                  onClick={toggleFavorite}
+                  disabled={favoriteLoading}
+                  className={`flex-1 border px-6 py-3 rounded-lg transition font-medium flex items-center justify-center gap-2 ${
+                    isFavorite
+                      ? 'bg-emerald-500 text-white border-emerald-500'
+                      : 'border-emerald-500 text-emerald-600 hover:bg-emerald-50'
+                  }`}
+                >
+                  <Heart className={`h-5 w-5 ${isFavorite ? 'fill-current' : ''}`} />
+                  {isFavorite ? 'お気に入り済み' : 'お気に入りに追加'}
                 </button>
               </div>
             </div>
@@ -240,53 +292,77 @@ export default function ProductDetailPage({ params }) {
               {activeTab === 'reviews' && (
                 <div>
                   <h3 className="text-lg font-semibold text-gray-800 mb-6">
-                    レビュー ({product.reviews.length}件)
+                    レビュー ({reviews.length}件)
                   </h3>
-                  <div className="space-y-6">
-                    {product.reviews.map(review => (
-                      <div key={review.id} className="border-b pb-6 last:border-b-0">
-                        <div className="flex items-start gap-4">
-                          <div className="w-10 h-10 bg-gray-200 rounded-full overflow-hidden">
-                            {review.userAvatar && (
-                              <Image
-                                src={review.userAvatar}
-                                alt={review.userName}
-                                width={40}
-                                height={40}
-                                className="object-cover"
-                              />
-                            )}
-                          </div>
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-2">
-                              <span className="font-medium text-gray-800">{review.userName}</span>
-                              <div className="flex items-center gap-1">
-                                {[...Array(5)].map((_, i) => (
-                                  <Star 
-                                    key={i} 
-                                    className={`h-4 w-4 ${
-                                      i < review.rating 
-                                        ? 'text-yellow-400 fill-current' 
-                                        : 'text-gray-300'
-                                    }`} 
-                                  />
-                                ))}
-                              </div>
-                              <span className="text-sm text-gray-500">
-                                {review.createdAt.toLocaleDateString('ja-JP')}
-                              </span>
+                  {reviewsLoading ? (
+                    <div className="flex justify-center py-8">
+                      <Loader2 className="h-8 w-8 animate-spin text-emerald-500" />
+                    </div>
+                  ) : reviews.length === 0 ? (
+                    <div className="text-center py-8 text-gray-500">
+                      まだレビューがありません
+                    </div>
+                  ) : (
+                    <div className="space-y-6">
+                      {reviews.map(review => (
+                        <div key={review.id} className="border-b pb-6 last:border-b-0">
+                          <div className="flex items-start gap-4">
+                            <div className="w-10 h-10 bg-gray-200 rounded-full overflow-hidden flex items-center justify-center text-gray-500">
+                              {review.userAvatar ? (
+                                <Image
+                                  src={review.userAvatar}
+                                  alt={review.userName}
+                                  width={40}
+                                  height={40}
+                                  className="object-cover"
+                                />
+                              ) : (
+                                <span className="text-lg font-bold">{review.userName.charAt(0)}</span>
+                              )}
                             </div>
-                            <p className="text-gray-700 mb-2">{review.comment}</p>
-                            <div className="flex items-center gap-4 text-sm text-gray-500">
-                              <button className="hover:text-emerald-600 transition">
-                                参考になった ({review.helpful})
-                              </button>
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-2">
+                                <span className="font-medium text-gray-800">{review.userName}</span>
+                                <div className="flex items-center gap-1">
+                                  {[...Array(5)].map((_, i) => (
+                                    <Star
+                                      key={i}
+                                      className={`h-4 w-4 ${
+                                        i < review.rating
+                                          ? 'text-yellow-400 fill-current'
+                                          : 'text-gray-300'
+                                      }`}
+                                    />
+                                  ))}
+                                </div>
+                                <span className="text-sm text-gray-500">
+                                  {new Date(review.createdAt).toLocaleDateString('ja-JP')}
+                                </span>
+                              </div>
+                              {review.title && (
+                                <h4 className="font-medium text-gray-800 mb-1">{review.title}</h4>
+                              )}
+                              <p className="text-gray-700 mb-2">{review.content || review.comment}</p>
+                              <div className="flex items-center gap-4 text-sm text-gray-500">
+                                <button
+                                  onClick={() => markHelpful(review.id)}
+                                  disabled={hasMarkedHelpful(review.id)}
+                                  className={`flex items-center gap-1 transition ${
+                                    hasMarkedHelpful(review.id)
+                                      ? 'text-emerald-600'
+                                      : 'hover:text-emerald-600'
+                                  }`}
+                                >
+                                  <ThumbsUp className="h-4 w-4" />
+                                  参考になった ({review.helpful})
+                                </button>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
 

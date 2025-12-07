@@ -1,0 +1,10 @@
+
+> kenkotaiken@0.1.0 lint
+> eslint
+
+
+C:\Users\awake\Obsidian Vault\Create\kenkotaiken\app\search\page.js
+  43:6  warning  React Hook useEffect has a missing dependency: 'searchQuery'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+✖ 1 problem (0 errors, 1 warning)
+

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, Suspense, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -14,18 +14,12 @@ function SearchPageContent() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [results, setResults] = useState([]);
 
-  useEffect(() => {
-    if (searchQuery) {
-      performSearch();
-    }
-  }, [searchQuery, selectedCategory]);
-
-  const performSearch = () => {
+  const performSearch = useCallback(() => {
     let filteredProducts = products;
 
     // テキスト検索
     if (searchQuery) {
-      filteredProducts = filteredProducts.filter(product => 
+      filteredProducts = filteredProducts.filter(product =>
         product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
         product.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -40,7 +34,13 @@ function SearchPageContent() {
     }
 
     setResults(filteredProducts);
-  };
+  }, [searchQuery, selectedCategory]);
+
+  useEffect(() => {
+    if (searchQuery) {
+      performSearch();
+    }
+  }, [performSearch, searchQuery]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -68,7 +68,7 @@ function SearchPageContent() {
                   className="w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-800"
                 />
               </div>
-              <button 
+              <button
                 type="submit"
                 className="bg-white text-emerald-600 px-6 py-3 rounded-lg hover:bg-gray-100 transition font-medium"
               >
@@ -93,7 +93,7 @@ function SearchPageContent() {
                 <Filter className="h-5 w-5 mr-2" />
                 絞り込み
               </h3>
-              
+
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">

@@ -1,0 +1,13 @@
+
+> kenkotaiken@0.1.0 lint
+> eslint
+
+
+C:\Users\awake\Obsidian Vault\Create\kenkotaiken\app\faq\page.js
+  5:9  error  Parsing error: Identifier 'useState' has already been declared. (5:9)
+
+C:\Users\awake\Obsidian Vault\Create\kenkotaiken\app\search\page.js
+  21:6  warning  React Hook useEffect has a missing dependency: 'performSearch'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+✖ 2 problems (1 error, 1 warning)
+

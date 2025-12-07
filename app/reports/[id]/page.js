@@ -3,12 +3,19 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowLeft, Play, Star, Heart, Calendar, Clock, MapPin, User, ThumbsUp, Share2, MessageCircle } from 'lucide-react';
+import { ArrowLeft, Play, Star, Heart, Calendar, Clock, MapPin, User, ThumbsUp, Share2, MessageCircle, Twitter, Facebook } from 'lucide-react';
 import { experienceReports } from '../../data/mockData';
+import { useLikes } from '../../hooks/useFavorites';
+import { useShare } from '../../hooks/useShare';
 
 export default function ReportDetailPage({ params }) {
-  const [liked, setLiked] = useState(false);
   const report = experienceReports.find(r => r.id === params.id);
+
+  // フック接続
+  const { isLiked, toggleLike, getLikeCount } = useLikes();
+  const { shareToTwitter, shareToFacebook, shareToLine, copyToClipboard } = useShare();
+  const [showShareMenu, setShowShareMenu] = useState(false);
+  const [copySuccess, setCopySuccess] = useState(false);
 
   if (!report) {
     return (
@@ -23,8 +30,24 @@ export default function ReportDetailPage({ params }) {
     );
   }
 
+  // フックを使用したいいね処理
+  const liked = isLiked(params.id, 'report');
+  const likeCount = getLikeCount(params.id, 'report') || report.likes;
+
   const handleLike = () => {
-    setLiked(!liked);
+    toggleLike(params.id, 'report', report.likes);
+  };
+
+  // シェア機能
+  const shareData = { title: report.title, url: typeof window !== 'undefined' ? window.location.href : '' };
+
+  const handleCopyLink = async () => {
+    const success = await copyToClipboard();
+    if (success) {
+      setCopySuccess(true);
+      setTimeout(() => setCopySuccess(false), 2000);
+    }
+    setShowShareMenu(false);
   };
 
   return (
@@ -115,13 +138,35 @@ export default function ReportDetailPage({ params }) {
                   }`}
                 >
                   <Heart className={`h-4 w-4 ${liked ? 'fill-current' : ''}`} />
-                  <span>{report.likes + (liked ? 1 : 0)}</span>
+                  <span>{likeCount + (liked ? 1 : 0)}</span>
                 </button>
-                
-                <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition">
-                  <Share2 className="h-4 w-4" />
-                  シェア
-                </button>
+
+                <div className="relative">
+                  <button
+                    onClick={() => setShowShareMenu(!showShareMenu)}
+                    className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition"
+                  >
+                    <Share2 className="h-4 w-4" />
+                    {copySuccess ? 'コピー完了!' : 'シェア'}
+                  </button>
+                  {showShareMenu && (
+                    <div className="absolute right-0 top-12 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50 min-w-[160px]">
+                      <button onClick={() => { shareToTwitter(shareData); setShowShareMenu(false); }} className="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center gap-2 text-sm">
+                        <Twitter className="w-4 h-4 text-blue-400" /> Twitter
+                      </button>
+                      <button onClick={() => { shareToFacebook(shareData); setShowShareMenu(false); }} className="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center gap-2 text-sm">
+                        <Facebook className="w-4 h-4 text-blue-600" /> Facebook
+                      </button>
+                      <button onClick={() => { shareToLine(shareData); setShowShareMenu(false); }} className="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center gap-2 text-sm">
+                        <MessageCircle className="w-4 h-4 text-green-500" /> LINE
+                      </button>
+                      <hr className="my-1" />
+                      <button onClick={handleCopyLink} className="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center gap-2 text-sm">
+                        <Share2 className="w-4 h-4 text-gray-500" /> リンクをコピー
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 

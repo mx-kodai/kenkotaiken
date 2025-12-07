@@ -1,0 +1,15 @@
+app/hooks/useMyPage.ts(10,41): error TS2305: Module '"../data/mockData"' has no exported member 'events'.
+app/hooks/useRanking.ts(11,41): error TS2305: Module '"../data/mockData"' has no exported member 'events'.
+app/hooks/useSearch.ts(12,41): error TS2305: Module '"../data/mockData"' has no exported member 'events'.
+app/hooks/useSearch.ts(90,24): error TS2339: Property 'toLowerCase' does not exist on type 'Category'.
+app/hooks/useSearch.ts(95,37): error TS2367: This comparison appears to be unintentional because the types 'Category' and 'string' have no overlap.
+app/hooks/useSearch.ts(100,43): error TS2367: This comparison appears to be unintentional because the types 'ExperienceType[]' and 'string' have no overlap.
+app/hooks/useSearch.ts(119,14): error TS2362: The left-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+app/hooks/useSearch.ts(119,21): error TS2363: The right-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+app/hooks/useSearch.ts(135,16): error TS2339: Property 'description' does not exist on type 'ExperienceLocation'.
+app/hooks/useSearch.ts(158,14): error TS2362: The left-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+app/hooks/useSearch.ts(158,21): error TS2363: The right-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+app/hooks/useSearch.ts(160,16): error TS2339: Property 'reviewCount' does not exist on type 'ExperienceLocation'.
+app/hooks/useSearch.ts(160,32): error TS2339: Property 'reviewCount' does not exist on type 'ExperienceLocation'.
+app/hooks/useSearch.ts(162,28): error TS2339: Property 'reviewCount' does not exist on type 'ExperienceLocation'.
+app/hooks/useSearch.ts(162,57): error TS2339: Property 'reviewCount' does not exist on type 'ExperienceLocation'.

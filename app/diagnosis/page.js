@@ -1,231 +1,260 @@
 'use client';
 
 import { useState } from 'react';
-import { ChevronRight, ChevronLeft, Sparkles } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  ChevronRight, RefreshCw, CheckCircle, ArrowRight, Activity, Moon, Sun, Heart, ChevronLeft,
+  Frown, Battery, Sofa, Users, User, Clock, Briefcase, Home, Brain, Scale, Sparkles, Smartphone, Stethoscope
+} from 'lucide-react';
+import Link from 'next/link';
+import Image from 'next/image';
+import PageHero from '../components/PageHero';
 import ProductCard from '../components/ProductCard';
-import { diagnosisQuestions, products, categories } from '../data/mockData';
+import { useDiagnosis } from '../hooks/useDiagnosis';
 
 export default function DiagnosisPage() {
-  const [currentStep, setCurrentStep] = useState(0);
-  const [answers, setAnswers] = useState({});
-  const [showResult, setShowResult] = useState(false);
-  const [recommendedProducts, setRecommendedProducts] = useState([]);
+  // フック接続
+  const {
+    currentStep,
+    currentQuestion,
+    totalSteps,
+    progress,
+    result,
+    isComplete,
+    answerQuestion,
+    goBack,
+    reset,
+  } = useDiagnosis();
 
-  const currentQuestion = diagnosisQuestions[currentStep];
-  const progress = ((currentStep + 1) / diagnosisQuestions.length) * 100;
+  const [isDiagnosing, setIsDiagnosing] = useState(false);
 
-  const handleAnswer = (questionId, optionId) => {
-    const newAnswers = { ...answers };
-    
-    if (currentQuestion.type === 'multiple') {
-      if (!newAnswers[questionId]) {
-        newAnswers[questionId] = [];
-      }
-      const index = newAnswers[questionId].indexOf(optionId);
-      if (index > -1) {
-        newAnswers[questionId].splice(index, 1);
-      } else {
-        newAnswers[questionId].push(optionId);
-      }
+  const handleAnswer = (option) => {
+    if (currentStep < totalSteps - 1) {
+      answerQuestion(option.value);
     } else {
-      newAnswers[questionId] = optionId;
-    }
-    
-    setAnswers(newAnswers);
-  };
-
-  const handleNext = () => {
-    if (currentStep < diagnosisQuestions.length - 1) {
-      setCurrentStep(currentStep + 1);
-    } else {
-      generateRecommendations();
+      // 最後の質問の場合、診断中表示を挟む
+      setIsDiagnosing(true);
+      setTimeout(() => {
+        answerQuestion(option.value);
+        setIsDiagnosing(false);
+      }, 1500);
     }
   };
 
-  const handlePrevious = () => {
-    if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
-    }
+  const resetQuiz = () => {
+    reset();
   };
-
-  const generateRecommendations = () => {
-    const recommendedCategoryIds = new Set();
-    
-    Object.entries(answers).forEach(([questionId, answerIds]) => {
-      const question = diagnosisQuestions.find(q => q.id === questionId);
-      if (question) {
-        const selectedOptions = Array.isArray(answerIds) ? answerIds : [answerIds];
-        selectedOptions.forEach(optionId => {
-          const option = question.options.find(o => o.id === optionId);
-          if (option?.relatedCategories) {
-            option.relatedCategories.forEach(catId => recommendedCategoryIds.add(catId));
-          }
-        });
-      }
-    });
-
-    const recommended = products.filter(product => 
-      recommendedCategoryIds.has(product.category.id)
-    ).slice(0, 3);
-
-    if (recommended.length === 0) {
-      setRecommendedProducts(products.slice(0, 3));
-    } else {
-      setRecommendedProducts(recommended);
-    }
-    
-    setShowResult(true);
-  };
-
-  const restart = () => {
-    setCurrentStep(0);
-    setAnswers({});
-    setShowResult(false);
-    setRecommendedProducts([]);
-  };
-
-  const isAnswerSelected = () => {
-    const answer = answers[currentQuestion.id];
-    if (currentQuestion.type === 'multiple') {
-      return answer && answer.length > 0;
-    }
-    return !!answer;
-  };
-
-  if (showResult) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-blue-50 py-12">
-        <div className="container mx-auto px-4 max-w-4xl">
-          <div className="text-center mb-12">
-            <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Sparkles className="h-10 w-10 text-emerald-600" />
-            </div>
-            <h1 className="text-3xl font-bold text-gray-800 mb-4">
-              診断結果
-            </h1>
-            <p className="text-lg text-gray-600">
-              あなたにおすすめの商品をご紹介します
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6 mb-12">
-            {recommendedProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-
-          <div className="text-center">
-            <button
-              onClick={restart}
-              className="bg-emerald-500 text-white px-8 py-3 rounded-lg hover:bg-emerald-600 transition font-medium"
-            >
-              もう一度診断する
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-blue-50 py-12">
-      <div className="container mx-auto px-4 max-w-2xl">
-        <div className="bg-white rounded-2xl shadow-lg p-8">
-          <div className="mb-8">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-sm text-gray-500">
-                質問 {currentStep + 1} / {diagnosisQuestions.length}
-              </h2>
-              <span className="text-sm text-gray-500">
-                {Math.round(progress)}% 完了
-              </span>
-            </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
-              <div
-                className="bg-emerald-500 h-2 rounded-full transition-all duration-300"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-          </div>
+    <div className="min-h-screen bg-gray-50 pt-20 pb-12">
+      <PageHero
+        title="AI Health Check"
+        subtitle="AIヘルスチェック診断"
+        image="/images/hero-diagnosis.png"
+        description="3つの質問に答えるだけで、今のあなたに最適な健康体験をご提案します。AIがあなたの状態を分析し、パーソナライズされたプランを導き出します。"
+      />
 
-          <div className="mb-8">
-            <h1 className="text-2xl font-bold text-gray-800 mb-6">
-              {currentQuestion.question}
-            </h1>
+      <div className="container mx-auto px-4 max-w-2xl -mt-10 relative z-20">
 
-            <div className="space-y-3">
-              {currentQuestion.options.map((option) => {
-                const isSelected = currentQuestion.type === 'multiple'
-                  ? answers[currentQuestion.id]?.includes(option.id)
-                  : answers[currentQuestion.id] === option.id;
+        <div className="relative min-h-[500px]">
+          <AnimatePresence mode='wait'>
+            {/* Quiz Section */}
+            {!isComplete && !isDiagnosing && currentQuestion && (
+              <motion.div
+                key="quiz"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                className="bg-white rounded-3xl shadow-xl shadow-emerald-500/10 border border-gray-100 p-8"
+              >
+                <div className="mb-8">
+                  <div className="flex justify-between text-sm font-bold text-gray-400 mb-2">
+                    <span>QUESTION {currentStep + 1}</span>
+                    <span>{currentStep + 1} / {totalSteps}</span>
+                  </div>
+                  <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                    <motion.div
+                      className="h-full bg-emerald-500"
+                      initial={{ width: `${((currentStep) / totalSteps) * 100}%` }}
+                      animate={{ width: `${progress}%` }}
+                    />
+                  </div>
+                </div>
 
-                return (
+                {/* 戻るボタン */}
+                {currentStep > 0 && (
                   <button
-                    key={option.id}
-                    onClick={() => handleAnswer(currentQuestion.id, option.id)}
-                    className={`w-full p-4 rounded-lg border-2 text-left transition ${
-                      isSelected
-                        ? 'border-emerald-500 bg-emerald-50'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
+                    onClick={goBack}
+                    className="flex items-center gap-1 text-gray-500 hover:text-emerald-600 text-sm mb-4 transition"
                   >
-                    <div className="flex items-center justify-between">
-                      <span className={isSelected ? 'font-medium' : ''}>
-                        {option.text}
-                      </span>
-                      {currentQuestion.type === 'multiple' && (
-                        <div className={`w-5 h-5 rounded border-2 ${
-                          isSelected
-                            ? 'bg-emerald-500 border-emerald-500'
-                            : 'border-gray-300'
-                        }`}>
-                          {isSelected && (
-                            <svg className="w-full h-full text-white" viewBox="0 0 20 20" fill="currentColor">
-                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                            </svg>
-                          )}
-                        </div>
-                      )}
-                    </div>
+                    <ChevronLeft className="w-4 h-4" />
+                    前の質問に戻る
                   </button>
-                );
-              })}
-            </div>
+                )}
 
-            {currentQuestion.type === 'multiple' && (
-              <p className="text-sm text-gray-500 mt-3">
-                複数選択可能です
-              </p>
+                <h2 className="text-xl font-bold text-gray-800 mb-4 leading-relaxed">
+                  {currentQuestion.question}
+                </h2>
+
+                <div className="space-y-4">
+                  {currentQuestion.options.map((option, idx) => {
+                    // Icon mapping based on value
+                    const getIcon = (val) => {
+                      switch (val) {
+                        case 'fatigue': return <Battery className="w-5 h-5" />;
+                        case 'stress': return <Frown className="w-5 h-5" />;
+                        case 'sleep': return <Moon className="w-5 h-5" />;
+                        case 'posture': return <Activity className="w-5 h-5" />;
+                        case 'weight': return <Scale className="w-5 h-5" />;
+                        case 'skin': return <Sparkles className="w-5 h-5" />;
+
+                        case 'desk': return <Briefcase className="w-5 h-5" />;
+                        case 'active': return <Activity className="w-5 h-5" />;
+                        case 'home': return <Home className="w-5 h-5" />;
+                        case 'busy': return <Clock className="w-5 h-5" />;
+
+                        case 'device': return <Smartphone className="w-5 h-5" />;
+                        case 'relax': return <Sofa className="w-5 h-5" />;
+                        case 'fitness': return <Activity className="w-5 h-5" />;
+                        case 'checkup': return <Stethoscope className="w-5 h-5" />;
+
+                        case 'short': return <Activity className="w-5 h-5" />;
+                        case 'medium': return <Clock className="w-5 h-5" />;
+                        case 'long': return <Sun className="w-5 h-5" />;
+
+                        case 'alone': return <User className="w-5 h-5" />;
+                        case 'partner': return <Users className="w-5 h-5" />;
+                        case 'family': return <Home className="w-5 h-5" />;
+                        case 'friends': return <Users className="w-5 h-5" />;
+                        default: return <span className="text-lg font-bold">{String.fromCharCode(65 + idx)}</span>;
+                      }
+                    };
+
+                    return (
+                      <button
+                        key={option.value}
+                        onClick={() => handleAnswer(option)}
+                        className="w-full text-left p-4 rounded-xl border-2 border-gray-100 hover:border-emerald-500 hover:bg-emerald-50 transition-all duration-200 group flex items-center gap-4"
+                      >
+                        <div className="w-10 h-10 rounded-full bg-gray-100 text-gray-500 flex items-center justify-center group-hover:bg-emerald-500 group-hover:text-white transition-colors">
+                          {getIcon(option.value)}
+                        </div>
+                        <span className="font-bold text-gray-700 group-hover:text-emerald-700">
+                          {option.label}
+                        </span>
+                        <ChevronRight className="w-5 h-5 ml-auto text-gray-300 group-hover:text-emerald-500" />
+                      </button>
+                    );
+                  })}
+                </div>
+              </motion.div>
             )}
-          </div>
 
-          <div className="flex justify-between">
-            <button
-              onClick={handlePrevious}
-              disabled={currentStep === 0}
-              className={`flex items-center px-6 py-3 rounded-lg transition ${
-                currentStep === 0
-                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-            >
-              <ChevronLeft className="h-5 w-5 mr-1" />
-              前へ
-            </button>
+            {/* Loading/Diagnosing State */}
+            {isDiagnosing && (
+              <motion.div
+                key="loading"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="absolute inset-0 flex flex-col items-center justify-center bg-white/80 backdrop-blur-sm rounded-3xl z-10"
+              >
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                  className="w-16 h-16 border-4 border-emerald-200 border-t-emerald-500 rounded-full mb-6"
+                />
+                <h3 className="text-xl font-bold text-gray-800 animate-pulse">
+                  最適なプランを分析中...
+                </h3>
+              </motion.div>
+            )}
 
-            <button
-              onClick={handleNext}
-              disabled={!isAnswerSelected()}
-              className={`flex items-center px-6 py-3 rounded-lg transition font-medium ${
-                !isAnswerSelected()
-                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                  : 'bg-emerald-500 text-white hover:bg-emerald-600'
-              }`}
-            >
-              {currentStep === diagnosisQuestions.length - 1 ? '結果を見る' : '次へ'}
-              <ChevronRight className="h-5 w-5 ml-1" />
-            </button>
-          </div>
+            {/* Result Section */}
+            {isComplete && result && (
+              <motion.div
+                key="result"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="bg-white rounded-3xl shadow-2xl shadow-emerald-500/20 border border-emerald-100 overflow-hidden"
+              >
+                <div className="relative h-48 bg-emerald-600">
+                  <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-6 text-center">
+                    <span className="text-emerald-100 font-bold tracking-wider text-sm mb-2">DIAGNOSIS RESULT</span>
+                    <h2 className="text-3xl font-bold mb-2">{result.mainCategory}</h2>
+                    <div className="w-16 h-1 bg-white/50 rounded-full" />
+                  </div>
+                </div>
+
+                <div className="p-8">
+                  <p className="text-gray-600 leading-relaxed mb-8 text-center">
+                    {result.message}
+                  </p>
+
+                  {/* ヒント */}
+                  <div className="bg-emerald-50 rounded-2xl p-6 mb-8">
+                    <h3 className="font-bold text-emerald-800 mb-4 flex items-center gap-2">
+                      <CheckCircle className="w-5 h-5 text-emerald-500" />
+                      健康アドバイス
+                    </h3>
+                    <ul className="space-y-3">
+                      {result.tips.map((tip, i) => (
+                        <li key={i} className="flex items-center gap-2 text-gray-700 bg-white p-3 rounded-lg shadow-sm border border-emerald-100">
+                          <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                          {tip}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* おすすめ商品 */}
+                  {result.recommendedProducts.length > 0 && (
+                    <div className="mb-8">
+                      <h3 className="font-bold text-gray-800 mb-4">おすすめの体験</h3>
+                      <div className="grid gap-4">
+                        {result.recommendedProducts.slice(0, 3).map(product => (
+                          <Link key={product.id} href={`/products/${product.id}`}>
+                            <div className="flex items-center gap-4 p-4 border rounded-xl hover:border-emerald-500 hover:shadow-md transition">
+                              <div className="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden relative flex-shrink-0">
+                                <Image
+                                  src={product.images[0]}
+                                  alt={product.name}
+                                  fill
+                                  className="object-cover"
+                                />
+                              </div>
+                              <div className="flex-1">
+                                <h4 className="font-medium text-gray-800">{product.name}</h4>
+                                <p className="text-sm text-gray-500">{product.category.name}</p>
+                              </div>
+                              <ArrowRight className="w-5 h-5 text-gray-300" />
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex flex-col gap-3">
+                    <Link
+                      href="/products"
+                      className="w-full bg-emerald-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-emerald-500/30 hover:bg-emerald-600 hover:translate-y-px transition-all flex items-center justify-center gap-2 group"
+                    >
+                      すべての体験を見る
+                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                    <button
+                      onClick={resetQuiz}
+                      className="w-full bg-white text-gray-500 font-bold py-3 rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
+                    >
+                      <RefreshCw className="w-4 h-4" />
+                      もう一度診断する
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </div>

@@ -14,10 +14,10 @@ export const categories: Category[] = [
 ];
 
 export const companies: Company[] = [
-  { id: 'comp-1', name: 'ヘルスケアプラス', description: '健康機器のリーディングカンパニー' },
-  { id: 'comp-2', name: 'ウェルネステック', description: '最新テクノロジーで健康をサポート' },
-  { id: 'comp-3', name: 'リラックスラボ', description: 'リラクゼーション機器専門メーカー' },
-  { id: 'comp-4', name: 'フィットライフ', description: 'フィットネス機器の専門企業' }
+  { id: 'comp-1', name: '(ダミー) ヘルスケアプラス', description: '健康機器のリーディングカンパニー' },
+  { id: 'comp-2', name: '(ダミー) ウェルネステック', description: '最新テクノロジーで健康をサポート' },
+  { id: 'comp-3', name: '(ダミー) リラックスラボ', description: 'リラクゼーション機器専門メーカー' },
+  { id: 'comp-4', name: '(ダミー) フィットライフ', description: 'フィットネス機器の専門企業' }
 ];
 
 export const concerns: Concern[] = [
@@ -226,7 +226,7 @@ const reviews: ExtendedReview[] = [
 export const products: Product[] = [
   {
     id: 'prod-1',
-    name: 'リライブシャツ',
+    name: '(ダミー) リライブシャツ',
     description: '着るだけで体のバランスを整える特殊加工シャツ。姿勢改善と疲労軽減をサポート',
     category: categories[3],
     company: companies[0],
@@ -240,7 +240,7 @@ export const products: Product[] = [
   },
   {
     id: 'prod-2',
-    name: 'クルミラ （KURUMIRA）',
+    name: '(ダミー) クルミラ',
     description: 'クルミのからを使用したマッサージボール。足裏や肩甘りのマッサージに',
     category: categories[4],
     company: companies[3],
@@ -254,7 +254,7 @@ export const products: Product[] = [
   },
   {
     id: 'prod-3',
-    name: 'アルファネス2 （αネス2）',
+    name: '(ダミー) アルファネス2',
     description: '脳波をα波へ誘導し、リラックス状態へ導くデバイス。睡眠の質向上をサポート',
     category: categories[2],
     company: companies[1],
@@ -268,7 +268,7 @@ export const products: Product[] = [
   },
   {
     id: 'prod-4',
-    name: '姿勢サポートクッション',
+    name: '(ダミー) 姿勢サポートクッション',
     description: '長時間のデスクワークでも正しい姿勢を保てる高機能クッション',
     category: categories[3],
     company: companies[2],
@@ -282,7 +282,7 @@ export const products: Product[] = [
   },
   {
     id: 'prod-5',
-    name: 'アロマディフューザー Pro',
+    name: '(ダミー) アロマディフューザー Pro',
     description: '医療グレードのアロマで本格的なリラクゼーション',
     category: categories[4],
     company: companies[2],
@@ -296,7 +296,7 @@ export const products: Product[] = [
   },
   {
     id: 'prod-6',
-    name: 'スマート体組成計',
+    name: '(ダミー) スマート体組成計',
     description: '体重だけでなく体脂肪率や筋肉量も測定できる高精度体組成計',
     category: categories[5],
     company: companies[1],
@@ -310,7 +310,7 @@ export const products: Product[] = [
   },
   {
     id: 'prod-7',
-    name: '姿勢矯正施術体験',
+    name: '(ダミー) 姿勢矯正施術体験',
     description: 'プロの整体師による姿勢分析と矯正施術を無料体験',
     category: categories[3],
     company: companies[2],
@@ -324,7 +324,7 @@ export const products: Product[] = [
   },
   {
     id: 'prod-8',
-    name: '足が速くなるトレーニング体験',
+    name: '(ダミー) 足が速くなるトレーニング体験',
     description: 'スポーツ科学に基づいた走り方改善プログラム',
     category: categories[1],
     company: companies[3],
@@ -338,7 +338,7 @@ export const products: Product[] = [
   },
   {
     id: 'prod-9',
-    name: 'ホットストーンマッサージ',
+    name: '(ダミー) ホットストーンマッサージ',
     description: '温めた天然石を使用したリラックスマッサージ',
     category: categories[4],
     company: companies[2],
@@ -352,7 +352,7 @@ export const products: Product[] = [
   },
   {
     id: 'prod-10',
-    name: '美顔器 エステプロ',
+    name: '(ダミー) 美顔器 エステプロ',
     description: '自宅でエステサロンのケアができる美顔器',
     category: categories[6],
     company: companies[1],
@@ -366,7 +366,7 @@ export const products: Product[] = [
   },
   {
     id: 'prod-11',
-    name: '水素吸入器',
+    name: '(ダミー) 水素吸入器',
     description: '水素ガスを吸入して体内からリフレッシュ',
     category: categories[5],
     company: companies[1],
@@ -380,7 +380,7 @@ export const products: Product[] = [
   },
   {
     id: 'prod-12',
-    name: '岩盤浴マット',
+    name: '(ダミー) 岩盤浴マット',
     description: '自宅で岩盤浴効果を体験できるマット',
     category: categories[8],
     company: companies[2],
@@ -394,7 +394,7 @@ export const products: Product[] = [
   },
   {
     id: 'prod-13',
-    name: 'ヨガマット＆オンラインレッスン',
+    name: '(ダミー) ヨガマット＆オンラインレッスン',
     description: '高品質ヨガマットとオンラインレッスンのセット',
     category: categories[9],
     company: companies[3],
@@ -408,7 +408,7 @@ export const products: Product[] = [
   },
   {
     id: 'prod-14',
-    name: 'プロテインサプリお試しセット',
+    name: '(ダミー) プロテインサプリお試しセット',
     description: '人気プロテインのお試しセット',
     category: categories[7],
     company: companies[0],
@@ -422,7 +422,7 @@ export const products: Product[] = [
   },
   {
     id: 'prod-15',
-    name: '電動フォームローラー',
+    name: '(ダミー) 電動フォームローラー',
     description: '筋膜リリースで体のこわばりを解消',
     category: categories[1],
     company: companies[3],
@@ -436,7 +436,7 @@ export const products: Product[] = [
   },
   {
     id: 'prod-16',
-    name: 'カップル限定ペア体験セット',
+    name: '(ダミー) カップル限定ペア体験セット',
     description: '二人で一緒に健康チェック＆マッサージ体験ができる特別メニュー',
     category: categories[4],
     company: companies[2],
@@ -450,7 +450,7 @@ export const products: Product[] = [
   },
   {
     id: 'prod-17',
-    name: 'ファミリー健康体験パック',
+    name: '(ダミー) ファミリー健康体験パック',
     description: 'お子様も一緒に楽しめる家族向け健康体験メニュー',
     category: categories[5],
     company: companies[3],
@@ -464,7 +464,7 @@ export const products: Product[] = [
   },
   {
     id: 'prod-18',
-    name: '富山県民限定特別体験',
+    name: '(ダミー) 富山県民限定特別体験',
     description: '富山県にお住まいの方限定の特別体験メニュー',
     category: categories[0],
     company: companies[0],
@@ -500,7 +500,7 @@ const toyamaCities = [
 export const experienceLocations: ExperienceLocation[] = [
   {
     id: 'loc-1',
-    name: 'ウェルナビ体験センター 富山',
+    name: '(ダミー) ウェルナビ体験センター 富山',
     address: '富山県富山市桜町1-1-1',
     prefecture: '富山県',
     city: '富山市',
@@ -515,7 +515,7 @@ export const experienceLocations: ExperienceLocation[] = [
   },
   {
     id: 'loc-2',
-    name: 'フィットネスラボ 高岡',
+    name: '(ダミー) フィットネスラボ 高岡',
     address: '富山県高岡市中川1-1-30',
     prefecture: '富山県',
     city: '高岡市',
@@ -530,7 +530,7 @@ export const experienceLocations: ExperienceLocation[] = [
   },
   {
     id: 'loc-3',
-    name: 'リラックスサロン 射水',
+    name: '(ダミー) リラックスサロン 射水',
     address: '富山県射水市三ケ576',
     prefecture: '富山県',
     city: '射水市',
@@ -545,7 +545,7 @@ export const experienceLocations: ExperienceLocation[] = [
   },
   {
     id: 'loc-4',
-    name: '健康プラザ 魚津',
+    name: '(ダミー) 健康プラザ 魚津',
     address: '富山県魚津市本町1-10-1',
     prefecture: '富山県',
     city: '魚津市',
@@ -560,7 +560,7 @@ export const experienceLocations: ExperienceLocation[] = [
   },
   {
     id: 'loc-5',
-    name: 'スポーツクラブ 黒部',
+    name: '(ダミー) スポーツクラブ 黒部',
     address: '富山県黒部市三日市1037-1',
     prefecture: '富山県',
     city: '黒部市',
@@ -575,7 +575,7 @@ export const experienceLocations: ExperienceLocation[] = [
   },
   {
     id: 'loc-6',
-    name: 'ウェルネスセンター 砚',
+    name: '(ダミー) ウェルネスセンター 砺波',
     address: '富山県砚市若草町3-10',
     prefecture: '富山県',
     city: '砚市',
@@ -590,7 +590,7 @@ export const experienceLocations: ExperienceLocation[] = [
   },
   {
     id: 'loc-7',
-    name: 'ボディケアスタジオ 氷見',
+    name: '(ダミー) ボディケアスタジオ 氷見',
     address: '富山県氷見市幸町17-1',
     prefecture: '富山県',
     city: '氷見市',
@@ -605,7 +605,7 @@ export const experienceLocations: ExperienceLocation[] = [
   },
   {
     id: 'loc-8',
-    name: 'ヘルスケアショップ 南砚',
+    name: '(ダミー) ヘルスケアショップ 南砺',
     address: '富山県南砚市福光288',
     prefecture: '富山県',
     city: '南砚市',
@@ -620,7 +620,7 @@ export const experienceLocations: ExperienceLocation[] = [
   },
   {
     id: 'loc-9',
-    name: 'ヨガスタジオ 立山',
+    name: '(ダミー) ヨガスタジオ 立山',
     address: '富山県立山町前沢新町595',
     prefecture: '富山県',
     city: '立山町',
@@ -635,7 +635,7 @@ export const experienceLocations: ExperienceLocation[] = [
   },
   {
     id: 'loc-10',
-    name: 'フィットネスプラザ 滑川',
+    name: '(ダミー) フィットネスプラザ 滑川',
     address: '富山県滑川市柳原3-1',
     prefecture: '富山県',
     city: '滑川市',
@@ -692,7 +692,7 @@ export const diagnosisQuestions: DiagnosisQuestion[] = [
 export const experienceReports: ExperienceReport[] = [
   {
     id: 'report-1',
-    title: 'リライブシャツを1週間着用してみました！',
+    title: '(ダミー) リライブシャツを1週間着用してみました！',
     description: 'デスクワークによる肩こりに悩まされていた私が、リライブシャツを1週間体験した結果をレポートします。',
     product: products[0], // リライブシャツ
     location: experienceLocations[0], // ウェルナビ体験センター 富山
@@ -721,7 +721,7 @@ export const experienceReports: ExperienceReport[] = [
   },
   {
     id: 'report-2',
-    title: 'クルミラマッサージボールでセルフケア体験',
+    title: '(ダミー) クルミラマッサージボールでセルフケア体験',
     description: '足裏マッサージが好きな私が、天然クルミ材のマッサージボールを試してみました。',
     product: products[1], // クルミラ
     location: experienceLocations[2], // リラックスサロン 射水
@@ -750,7 +750,7 @@ export const experienceReports: ExperienceReport[] = [
   },
   {
     id: 'report-3',
-    title: 'アルファネス2で睡眠の質が劇的改善！',
+    title: '(ダミー) アルファネス2で睡眠の質が劇的改善！',
     description: '不眠に悩んでいた私がアルファネス2を2週間使用した体験記録です。',
     product: products[2], // アルファネス2
     location: experienceLocations[5], // ウェルネスセンター 砺波
@@ -779,7 +779,7 @@ export const experienceReports: ExperienceReport[] = [
   },
   {
     id: 'report-4',
-    title: '足が速くなるトレーニングで子どもが変わった！',
+    title: '(ダミー) 足が速くなるトレーニングで子どもが変わった！',
     description: '運動会前に息子（小学3年生）がトレーニング体験に参加した結果をお伝えします。',
     product: products[7], // 足が速くなるトレーニング体験
     location: experienceLocations[4], // スポーツクラブ 黒部
@@ -808,7 +808,7 @@ export const experienceReports: ExperienceReport[] = [
   },
   {
     id: 'report-5',
-    title: '美顔器エステプロで自宅エステデビュー',
+    title: '(ダミー) 美顔器エステプロで自宅エステデビュー',
     description: 'エステサロンに通えない私が、自宅で本格ケアを体験してみました。',
     product: products[9], // 美顔器 エステプロ
     location: experienceLocations[6], // ボディケアスタジオ 氷見
@@ -840,7 +840,7 @@ export const experienceReports: ExperienceReport[] = [
 export const experienceEvents: ExperienceEvent[] = [
   {
     id: 'event-1',
-    title: '週末限定！ファボーレ健康体験フェア',
+    title: '(ダミー) 週末限定！ファボーレ健康体験フェア',
     description: '人気の健康機器を気軽に試せる特別イベント。お買い物ついでにカップル・ご家族でお楽しみください',
     venue: 'ファボーレ（富山ショッピングセンター）',
     address: '富山県富山市婦中町下轡田165-1',
@@ -865,7 +865,7 @@ export const experienceEvents: ExperienceEvent[] = [
   },
   {
     id: 'event-2',
-    title: 'イオンモール高岡 春の健康フェスティバル',
+    title: '(ダミー) イオンモール高岡 春の健康フェスティバル',
     description: '春の新生活応援！カップルペア体験や家族での健康チェックができます',
     venue: 'イオンモール高岡',
     address: '富山県高岡市下伏間江383',
@@ -889,7 +889,7 @@ export const experienceEvents: ExperienceEvent[] = [
   },
   {
     id: 'event-3',
-    title: 'MEGAドン・キホーテ射水店 健康応援デー',
+    title: '(ダミー) MEGAドン・キホーテ射水店 健康応援デー',
     description: '24時間営業の利便性を活かした夜間体験イベントも開催！',
     venue: 'MEGAドン・キホーテ射水店',
     address: '富山県射水市大島3208',
@@ -913,7 +913,7 @@ export const experienceEvents: ExperienceEvent[] = [
   },
   {
     id: 'event-4',
-    title: 'アピタ富山東店 健康の日スペシャル',
+    title: '(ダミー) アピタ富山東店 健康の日スペシャル',
     description: '毎月第3土日恒例！地域密着の健康体験イベント',
     venue: 'アピタ富山東店',
     address: '富山県富山市上飯野字西12-1',
@@ -938,7 +938,7 @@ export const experienceEvents: ExperienceEvent[] = [
   },
   {
     id: 'event-5',
-    title: 'となみチューリップフェア連動企画',
+    title: '(ダミー) となみチューリップフェア連動企画',
     description: 'チューリップフェア期間中の特別健康イベント！観光と一緒にお楽しみください',
     venue: 'となみ健康センター（臨時会場）',
     address: '富山県砺波市中村100-1',

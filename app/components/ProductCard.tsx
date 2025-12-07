@@ -1,9 +1,9 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
-import { MapPin, Package, Star, Heart, MessageCircle, ThumbsUp } from 'lucide-react';
+import Image from 'next/image';
+import { MapPin, Star } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { Product } from '../types';
 
 interface ProductCardProps {
@@ -11,103 +11,53 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
-  const [liked, setLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(Math.floor(Math.random() * 50) + 10);
-
-  const experienceTypeIcons = {
-    visit: <MapPin className="h-4 w-4" />,
-    delivery: <Package className="h-4 w-4" />,
-  };
-
-  const handleLike = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setLiked(!liked);
-    setLikeCount(liked ? likeCount - 1 : likeCount + 1);
-  };
-
-  const totalReviewLikes = product.reviews.reduce((sum, review) => sum + review.helpful, 0);
-
   return (
-    <Link href={`/products/${product.id}`}>
-      <div className="group bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden cursor-pointer">
-        <div className="aspect-[4/3] relative overflow-hidden bg-gray-100">
+    <motion.div
+      className="group relative bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-emerald-200 transition-all duration-300"
+      whileHover={{ y: -8, boxShadow: "0 20px 40px -15px rgba(16, 185, 129, 0.15)" }}
+    >
+      <Link href={`/products/${product.id}`} className="block h-full">
+        {/* Image Container with Overlay */}
+        <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
           <Image
-            src={product.images[0] || 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=800&q=80'}
+            src={product.images[0]}
             alt={product.name}
             fill
-            className="object-cover group-hover:scale-105 transition-transform duration-300"
+            className="object-cover transition-transform duration-700 group-hover:scale-110"
           />
-          {product.tags.includes('人気') && (
-            <span className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
-              人気
-            </span>
-          )}
-          {product.tags.includes('無料体験') && (
-            <span className="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded">
-              無料体験
-            </span>
-          )}
-          <button
-            onClick={handleLike}
-            className={`absolute bottom-2 right-2 p-2 rounded-full ${
-              liked ? 'bg-red-500 text-white' : 'bg-white/90 text-gray-600'
-            } hover:scale-110 transition`}
-          >
-            <Heart className={`h-4 w-4 ${liked ? 'fill-current' : ''}`} />
-          </button>
-        </div>
-        
-        <div className="p-4">
-          <div className="text-xs text-gray-500 mb-1">{product.category.name}</div>
-          <h3 className="font-semibold text-gray-800 mb-2 line-clamp-2">
-            {product.name}
-          </h3>
-          <p className="text-sm text-gray-600 mb-3 line-clamp-2">
-            {product.description}
-          </p>
-          
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-1">
-              <Star className="h-4 w-4 text-yellow-400 fill-current" />
-              <span className="text-sm font-medium text-gray-700">{product.rating}</span>
-              {product.reviews.length > 0 && (
-                <span className="text-xs text-gray-500">({product.reviews.length}件)</span>
-              )}
-            </div>
-            
-            <div className="flex items-center gap-2">
-              {product.experienceType.slice(0, 2).map((type) => (
-                <span key={type} className="text-gray-500" title={type === 'visit' ? '店舗体験' : '配送'}>
-                  {experienceTypeIcons[type as 'visit' | 'delivery']}
-                </span>
-              ))}
-            </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
+
+          <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-xs font-bold px-3 py-1.5 rounded-full text-gray-800 shadow-sm">
+            {product.category?.name || 'カテゴリ'}
           </div>
 
-          <div className="flex items-center justify-between text-xs text-gray-500">
-            <div className="flex items-center gap-3">
-              <span className="flex items-center gap-1">
-                <Heart className="h-3 w-3" />
-                {likeCount}
-              </span>
-              {product.reviews.length > 0 && (
-                <span className="flex items-center gap-1">
-                  <MessageCircle className="h-3 w-3" />
-                  {product.reviews.length}
-                </span>
-              )}
-              {totalReviewLikes > 0 && (
-                <span className="flex items-center gap-1">
-                  <ThumbsUp className="h-3 w-3" />
-                  {totalReviewLikes}
-                </span>
-              )}
+          <div className="absolute bottom-3 left-3 right-3 text-white">
+            <div className="flex items-center gap-1.5 text-xs font-medium bg-black/40 backdrop-blur-md w-fit px-2 py-1 rounded-md mb-2">
+              <MapPin className="w-3 h-3" />
+              <span>{product.location || '富山県'}</span>
             </div>
-            <span className="text-green-600 font-semibold">無料</span>
           </div>
         </div>
-      </div>
-    </Link>
+
+        {/* Content */}
+        <div className="p-5">
+          <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 leading-tight group-hover:text-emerald-700 transition-colors">
+            {product.name}
+          </h3>
+
+          <div className="flex items-center justify-between mt-4">
+            <div className="flex items-center gap-1.5">
+              <Star className="w-4 h-4 text-yellow-400 fill-current" />
+              <span className="font-bold text-gray-800">{product.rating}</span>
+              <span className="text-xs text-gray-400">({product.reviewCount || 0}件)</span>
+            </div>
+
+            <div className="text-sm font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">
+              無料体験
+            </div>
+          </div>
+        </div>
+      </Link>
+    </motion.div>
   );
 }

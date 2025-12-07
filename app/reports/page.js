@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import { Play, Heart, Calendar, Clock, MapPin, Star, User } from 'lucide-react';
+import PageHero from '../components/PageHero';
 import { experienceReports } from '../data/mockData';
 
 export default function ExperienceReportsPage() {
@@ -25,59 +26,50 @@ export default function ExperienceReportsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
-        <div className="container mx-auto px-4 py-16">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold mb-4">体験レポート</h1>
-            <p className="text-lg opacity-90">
-              実際に体験された方の生の声をお届けします
-            </p>
-          </div>
-        </div>
-      </div>
+      <PageHero
+        title="Real Voices"
+        subtitle="体験レポート"
+        image="/images/hero-reports.png"
+        description="実際に体験された方の生の声をお届けします。変化を実感した喜びのストーリーをご覧ください。"
+      />
 
       <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-wrap gap-2 mb-8">
+        {/* Filters */}
+        <div className="flex flex-wrap justify-center gap-4 mb-12">
           {filters.map(filter => (
             <button
               key={filter.value}
               onClick={() => setSelectedFilter(filter.value)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition ${
-                selectedFilter === filter.value
-                  ? 'bg-purple-500 text-white'
-                  : 'bg-white text-gray-700 hover:bg-purple-50'
-              }`}
+              className={`px-6 py-3 rounded-full font-bold transition-all ${selectedFilter === filter.value
+                ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/30 scale-105'
+                : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
+                }`}
             >
               {filter.label}
             </button>
           ))}
         </div>
 
+        {/* Reports Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredReports.map(report => (
-            <div key={report.id} className="bg-white rounded-lg shadow-sm hover:shadow-md transition overflow-hidden">
-              <div className="aspect-video relative bg-gray-100">
-                {report.videoUrl ? (
-                  <div className="relative w-full h-full">
-                    <Image
-                      src={report.images[0]}
-                      alt={report.title}
-                      fill
-                      className="object-cover"
-                    />
-                    <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
-                      <button className="bg-white bg-opacity-90 rounded-full p-4 hover:bg-opacity-100 transition">
-                        <Play className="h-8 w-8 text-purple-600 ml-1" fill="currentColor" />
-                      </button>
+            <div
+              key={report.id}
+              className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all"
+            >
+              <div className="relative aspect-video bg-gray-100">
+                <Image
+                  src={report.images[0]}
+                  alt={report.title}
+                  fill
+                  className="object-cover"
+                />
+                {report.videoUrl && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+                    <div className="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center">
+                      <Play className="w-5 h-5 text-purple-600 ml-1" fill="currentColor" />
                     </div>
                   </div>
-                ) : (
-                  <Image
-                    src={report.images[0]}
-                    alt={report.title}
-                    fill
-                    className="object-cover"
-                  />
                 )}
               </div>
 
@@ -108,7 +100,7 @@ export default function ExperienceReportsPage() {
                 <h3 className="font-bold text-lg text-gray-800 mb-2 line-clamp-2">
                   {report.title}
                 </h3>
-                
+
                 <p className="text-sm text-gray-600 mb-4 line-clamp-2">
                   {report.description}
                 </p>
@@ -162,7 +154,7 @@ export default function ExperienceReportsPage() {
                     <Heart className="h-4 w-4" />
                     <span className="text-sm">{report.likes}</span>
                   </button>
-                  
+
                   <Link
                     href={`/reports/${report.id}`}
                     className="text-sm text-purple-600 hover:text-purple-700 font-medium"
@@ -176,8 +168,8 @@ export default function ExperienceReportsPage() {
         </div>
 
         {filteredReports.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-gray-500">該当するレポートが見つかりませんでした</p>
+          <div className="text-center py-20 text-gray-500">
+            該当するレポートが見つかりませんでした。
           </div>
         )}
       </div>

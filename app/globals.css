@@ -3,53 +3,157 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* Vitality Flow Color Palette 2.0 */
+  --primary-50: #ecfdf5;
+  --primary-100: #d1fae5;
+  --primary-200: #a7f3d0;
+  --primary-300: #6ee7b7;
+  --primary-400: #34d399;
+  --primary-500: #10b981;
+  /* Emerald */
+  --primary-600: #059669;
+  --primary-700: #047857;
+
+  --secondary-50: #f0f9ff;
+  --secondary-500: #0ea5e9;
+  /* Sky Blue */
+
+  --accent-blue: #3b82f6;
+  --accent-purple: #8b5cf6;
+  --accent-pink: #ec4899;
+
+  /* Advanced Glassmorphism */
+  --glass-border: rgba(255, 255, 255, 0.4);
+  --glass-surface: rgba(255, 255, 255, 0.75);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+  --glass-highlight: rgba(255, 255, 255, 0.6);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: 'Zen Kaku Gothic New', var(--font-geist-sans), sans-serif;
   --font-mono: var(--font-geist-mono);
+
+  /* Custom Colors */
+  --color-brand-primary: var(--primary-500);
+  --color-brand-light: var(--primary-50);
+  --color-brand-dark: var(--primary-700);
+
+  --shadow-glow: 0 0 20px rgba(16, 185, 129, 0.3);
+  --shadow-glass: var(--glass-shadow);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0f172a;
+    --foreground: #f8fafc;
+    --glass-surface: rgba(15, 23, 42, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-highlight: rgba(255, 255, 255, 0.05);
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  font-feature-settings: "palt";
+  letter-spacing: 0.04em;
+  /* Improve Japanese readability */
 }
 
-/* レスポンシブ横スクロール用のスムースなスクロール */
-.overflow-x-auto {
-  scrollbar-width: thin;
-  scrollbar-color: #cbd5e0 #f7fafc;
+/* Glassmorphism Utilities 2.0 */
+.glass-panel {
+  background: var(--glass-surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  position: relative;
 }
 
-.overflow-x-auto::-webkit-scrollbar {
-  height: 6px;
+.glass-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, var(--glass-highlight), transparent);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
 }
 
-.overflow-x-auto::-webkit-scrollbar-track {
-  background: #f7fafc;
-  border-radius: 3px;
+.text-gradient {
+  background: linear-gradient(135deg, var(--primary-600), var(--secondary-500));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
 }
 
-.overflow-x-auto::-webkit-scrollbar-thumb {
-  background: #cbd5e0;
-  border-radius: 3px;
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
 }
 
-.overflow-x-auto::-webkit-scrollbar-thumb:hover {
-  background: #a0aec0;
+::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-/* テキストの省略表示 */
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 5px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+/* Animations */
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse-soft {
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.8;
+    transform: scale(0.98);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 3s ease-in-out infinite;
+}
+
+/* Utilities */
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -64,57 +168,61 @@ body {
   overflow: hidden;
 }
 
-/* スムースなスクロール動作 */
-html {
-  scroll-behavior: smooth;
+/* Button Ripple & Hover Effects */
+.btn-hover-effect {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* カードのホバーエフェクト */
-.card-hover {
-  transition: all 0.3s ease;
-}
-
-.card-hover:hover {
+.btn-hover-effect:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.3);
 }
 
-/* モバイル用のタッチフレンドリーなボタンサイズ */
-@media (max-width: 768px) {
-  button, .btn {
-    min-height: 44px;
-    min-width: 44px;
-  }
-  
-  /* 横スクロールセクションでのスナップ効果 */
-  .snap-x {
-    scroll-snap-type: x mandatory;
-  }
-  
-  .snap-start {
-    scroll-snap-align: start;
+.btn-hover-effect:active {
+  transform: translateY(0);
+}
+
+input::placeholder {
+  color: #94a3b8;
+  opacity: 1;
+}
+
+/* Accessibility: Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
-/* アクセシビリティ - フォーカス表示 */
-button:focus,
-a:focus,
-input:focus,
-select:focus {
-  outline: 2px solid #10b981;
+/* Accessibility: Focus Visible */
+:focus-visible {
+  outline: 3px solid var(--primary-500);
   outline-offset: 2px;
 }
 
-/* ローディング状態 */
-.loading {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --glass-surface: rgba(255, 255, 255, 0.95);
+    --glass-border: rgba(0, 0, 0, 0.3);
+  }
+
+  .text-gray-400,
+  .text-gray-500 {
+    color: #374151 !important;
+  }
 }
 
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: .5;
-  }
+/* Ensure minimum touch target size (44x44px) */
+button,
+a,
+input,
+[role="button"] {
+  min-height: 44px;
+  min-width: 44px;
 }

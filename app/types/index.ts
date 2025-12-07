@@ -11,6 +11,8 @@ export interface Product {
   tags: string[];
   reviews: Review[];
   rating: number;
+  location?: string;
+  reviewCount?: number;
 }
 
 export interface ExperienceLocation {

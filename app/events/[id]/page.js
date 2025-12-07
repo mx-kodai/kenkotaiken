@@ -3,18 +3,26 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowLeft, Calendar, MapPin, Clock, Users, Phone, Mail, Tag, Star, Heart, Share2, AlertCircle, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Calendar, MapPin, Clock, Users, Phone, Mail, Tag, Star, Heart, Share2, AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
 import ProductCard from '../../components/ProductCard';
 import { experienceEvents } from '../../data/mockData';
+import { useLikes, useFavorites } from '../../hooks/useFavorites';
+import { useShare } from '../../hooks/useShare';
+import { useEventReservation } from '../../hooks/useEventCalendar';
 
 export default function EventDetailPage({ params }) {
-  const [liked, setLiked] = useState(false);
   const [registrationData, setRegistrationData] = useState({
     name: '',
     email: '',
     phone: '',
     participants: 1
   });
+
+  // フック接続
+  const { isLiked, likeCount, toggleLike, isLoading: likeLoading } = useLikes(params.id, 'event');
+  const { isFavorite, toggleFavorite, isLoading: favoriteLoading } = useFavorites(params.id, 'event');
+  const { shareToTwitter, shareToFacebook, shareToLine, copyLink } = useShare();
+  const { reserve, isSubmitting: reservationSubmitting, isReserved, error: reservationError } = useEventReservation(params.id);
   
   const event = experienceEvents.find(e => e.id === params.id);
   
@@ -46,8 +54,46 @@ export default function EventDetailPage({ params }) {
 
   const statusInfo = getEventStatus();
 
-  const handleLike = () => {
-    setLiked(!liked);
+  // シェア処理
+  const handleShare = (platform) => {
+    const shareData = {
+      title: event.title,
+      text: event.description.slice(0, 100) + '...',
+      url: typeof window !== 'undefined' ? window.location.href : '',
+    };
+
+    switch (platform) {
+      case 'twitter':
+        shareToTwitter(shareData);
+        break;
+      case 'facebook':
+        shareToFacebook(shareData);
+        break;
+      case 'line':
+        shareToLine(shareData);
+        break;
+      case 'copy':
+        copyLink(shareData.url);
+        break;
+    }
+  };
+
+  // 予約処理
+  const handleReservation = async () => {
+    if (!registrationData.name || !registrationData.email || !registrationData.phone) {
+      alert('必須項目を入力してください');
+      return;
+    }
+
+    const success = await reserve({
+      name: registrationData.name,
+      email: registrationData.email,
+      phone: registrationData.phone,
+    });
+
+    if (success) {
+      // 予約完了 - isReservedがtrueになる
+    }
   };
 
   const formatDate = (date) => {
@@ -99,17 +145,27 @@ export default function EventDetailPage({ params }) {
             
             <div className="absolute bottom-4 right-4 flex gap-2">
               <button
-                onClick={handleLike}
-                className={`p-2 rounded-full backdrop-blur-sm transition ${
-                  liked ? 'bg-red-100/80 text-red-600' : 'bg-white/80 text-gray-600 hover:bg-red-50/80'
+                onClick={toggleLike}
+                disabled={likeLoading}
+                className={`p-2 rounded-full backdrop-blur-sm transition flex items-center gap-1 ${
+                  isLiked ? 'bg-red-100/80 text-red-600' : 'bg-white/80 text-gray-600 hover:bg-red-50/80'
                 }`}
               >
-                <Heart className={`h-5 w-5 ${liked ? 'fill-current' : ''}`} />
+                <Heart className={`h-5 w-5 ${isLiked ? 'fill-current' : ''}`} />
+                {likeCount > 0 && <span className="text-sm">{likeCount}</span>}
               </button>
-              
-              <button className="p-2 bg-white/80 backdrop-blur-sm text-gray-600 rounded-full hover:bg-gray-100/80 transition">
-                <Share2 className="h-5 w-5" />
-              </button>
+
+              <div className="relative group">
+                <button className="p-2 bg-white/80 backdrop-blur-sm text-gray-600 rounded-full hover:bg-gray-100/80 transition">
+                  <Share2 className="h-5 w-5" />
+                </button>
+                <div className="absolute right-0 top-full mt-2 bg-white rounded-lg shadow-lg border p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10 min-w-[120px]">
+                  <button onClick={() => handleShare('twitter')} className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 rounded">Twitter</button>
+                  <button onClick={() => handleShare('facebook')} className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 rounded">Facebook</button>
+                  <button onClick={() => handleShare('line')} className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 rounded">LINE</button>
+                  <button onClick={() => handleShare('copy')} className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 rounded">URLコピー</button>
+                </div>
+              </div>
             </div>
             
             <div className="absolute top-4 left-4 bg-pink-500 text-white text-sm px-3 py-1 rounded-full">
@@ -277,6 +333,14 @@ export default function EventDetailPage({ params }) {
                       キャンセル待ちをご希望の場合は、お電話にてお問い合わせください
                     </p>
                   </div>
+                ) : isReserved ? (
+                  <div className="text-center py-8">
+                    <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
+                    <h4 className="text-lg font-semibold text-gray-800 mb-2">予約が完了しました！</h4>
+                    <p className="text-gray-600">
+                      確認メールをお送りしましたのでご確認ください。
+                    </p>
+                  </div>
                 ) : (
                   <div className="grid md:grid-cols-2 gap-6">
                     <div className="space-y-4">
@@ -338,10 +402,26 @@ export default function EventDetailPage({ params }) {
                     </div>
 
                     <div className="md:col-span-2">
-                      <button className="w-full bg-pink-500 text-white px-6 py-3 rounded-lg hover:bg-pink-600 transition font-medium">
-                        参加予約を申し込む
+                      {reservationError && (
+                        <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm">
+                          {reservationError}
+                        </div>
+                      )}
+                      <button
+                        onClick={handleReservation}
+                        disabled={reservationSubmitting}
+                        className="w-full bg-pink-500 text-white px-6 py-3 rounded-lg hover:bg-pink-600 transition font-medium flex items-center justify-center gap-2"
+                      >
+                        {reservationSubmitting ? (
+                          <>
+                            <Loader2 className="h-5 w-5 animate-spin" />
+                            予約処理中...
+                          </>
+                        ) : (
+                          '参加予約を申し込む'
+                        )}
                       </button>
-                      
+
                       <p className="text-xs text-gray-600 mt-2">
                         ※予約確定後、確認メールをお送りいたします
                       </p>

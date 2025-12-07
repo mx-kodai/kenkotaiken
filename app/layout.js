@@ -1,7 +1,8 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Zen_Kaku_Gothic_New } from "next/font/google";
 import "./globals.css";
 import AnimatedHeader from "./components/AnimatedHeader";
 import Footer from "./components/Footer";
+import Providers from "./components/Providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,6 +14,13 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const zenKaku = Zen_Kaku_Gothic_New({
+  weight: ["300", "400", "500", "700"],
+  subsets: ["latin"],
+  variable: "--font-zen-kaku",
+  display: "swap",
+});
+
 export const metadata = {
   title: "ウェルナビ - 健康デバイス・施術の無料体験プラットフォーム",
   description: "健康デバイスや施術の無料体験を簡単に見つけて予約できるプラットフォーム。あなたにぴったりの健康ソリューションを見つけましょう。",
@@ -22,11 +30,15 @@ export default function RootLayout({ children }) {
   return (
     <html lang="ja">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${zenKaku.variable} antialiased`}
       >
-        <AnimatedHeader />
-        <main className="min-h-screen">{children}</main>
-        <Footer />
+        <Providers>
+          <AnimatedHeader />
+          <main id="main-content" className="min-h-screen" role="main" tabIndex={-1}>
+            {children}
+          </main>
+          <Footer />
+        </Providers>
       </body>
     </html>
   );
