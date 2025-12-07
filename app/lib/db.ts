@@ -519,8 +519,8 @@ export async function searchProducts(params: {
 
   // 体験方法フィルター
   if (params.experienceType && params.experienceType !== 'all') {
-    // @ts-ignore
-    results = results.filter(p => p.experienceType.includes(params.experienceType));
+    const expType = params.experienceType as 'visit' | 'delivery' | 'consultation' | 'online';
+    results = results.filter(p => p.experienceType.includes(expType));
   }
 
   // ソート
@@ -532,8 +532,7 @@ export async function searchProducts(params: {
       results.sort((a, b) => b.id.localeCompare(a.id));
       break;
     case 'popular':
-      // @ts-ignore
-      results.sort((a, b) => (b.reviewCount || 0) - (a.reviewCount || 0));
+      results.sort((a, b) => (b.reviewCount ?? 0) - (a.reviewCount ?? 0));
       break;
   }
 

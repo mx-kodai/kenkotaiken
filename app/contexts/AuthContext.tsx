@@ -24,11 +24,23 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 const SESSION_STORAGE_KEY = 'wellnavi_session'; // (ダミー) ストレージキー
 
+// デモ用のデフォルトセッション
+const DEMO_SESSION: Session = {
+  user: {
+    id: 'demo-user-1',
+    email: 'demo@wellnavi.jp',
+    name: 'ダミー太郎',
+    createdAt: new Date('2024-01-01'),
+  },
+  token: 'demo-token-12345',
+  expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1年間有効
+};
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // 初期化時にストレージからセッション復元
+  // 初期化時にストレージからセッション復元、なければデモセッション
   useEffect(() => {
     const stored = localStorage.getItem(SESSION_STORAGE_KEY);
     if (stored) {
@@ -41,11 +53,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (validateSession(parsed)) {
           setSession(parsed);
         } else {
-          localStorage.removeItem(SESSION_STORAGE_KEY);
+          // 期限切れの場合はデモセッションで再ログイン
+          setSession(DEMO_SESSION);
+          localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(DEMO_SESSION));
         }
       } catch (e) {
-        localStorage.removeItem(SESSION_STORAGE_KEY);
+        // パースエラーの場合はデモセッションで再ログイン
+        setSession(DEMO_SESSION);
+        localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(DEMO_SESSION));
       }
+    } else {
+      // ストレージにない場合はデモセッションで自動ログイン
+      setSession(DEMO_SESSION);
+      localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(DEMO_SESSION));
     }
     setIsLoading(false);
   }, []);

@@ -8,6 +8,7 @@
  */
 
 import { useState, useCallback } from 'react';
+import { isValidEmail } from '../lib/validation';
 
 export interface ContactFormData {
   name: string;
@@ -32,9 +33,8 @@ export function useContact() {
         throw new Error('必須項目を入力してください');
       }
 
-      // メールアドレスの簡易バリデーション
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(data.email)) {
+      // メールアドレスのバリデーション
+      if (!isValidEmail(data.email)) {
         throw new Error('有効なメールアドレスを入力してください');
       }
 
@@ -82,9 +82,8 @@ export function useNewsletter() {
     setError(null);
 
     try {
-      // メールアドレスの簡易バリデーション
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
+      // メールアドレスのバリデーション
+      if (!isValidEmail(email)) {
         throw new Error('有効なメールアドレスを入力してください');
       }
 

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { User, Calendar, Heart, Clock, Settings, LogOut, Bell, Activity, Loader2 } from 'lucide-react';
+import { User, Calendar, Heart, Clock, Settings, LogOut, Bell, Activity, Loader2, Building2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import PageHero from '../components/PageHero';
@@ -14,7 +14,7 @@ export default function MyPage() {
     const [activeTab, setActiveTab] = useState('dashboard');
 
     // フック接続
-    const { user: authUser, logout, isAuthenticated } = useAuth();
+    const { session, logout, isLoggedIn } = useAuth();
     const {
         user,
         reservations,
@@ -28,7 +28,7 @@ export default function MyPage() {
     const { recommendations, isLoading: recommendationsLoading } = useRecommendations();
 
     // 未ログイン時のリダイレクト用メッセージ
-    if (!isAuthenticated) {
+    if (!isLoggedIn) {
         return (
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
                 <div className="text-center bg-white rounded-3xl p-12 shadow-lg">
@@ -128,6 +128,13 @@ export default function MyPage() {
                                     onClick={() => setActiveTab('settings')}
                                 />
                                 <div className="pt-4 mt-4 border-t border-gray-100">
+                                    <Link
+                                        href="/business"
+                                        className="w-full flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-xl transition-colors"
+                                    >
+                                        <Building2 className="w-5 h-5" />
+                                        事業者ページへ
+                                    </Link>
                                     <button
                                         onClick={handleLogout}
                                         className="w-full flex items-center gap-3 px-4 py-3 text-red-500 font-bold hover:bg-red-50 rounded-xl transition-colors"

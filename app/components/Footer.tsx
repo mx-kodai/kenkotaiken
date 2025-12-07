@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { Instagram, Twitter, Facebook, Mail, ArrowRight, MapPin, Phone, Loader2, CheckCircle } from 'lucide-react';
+import { Mail, ArrowRight, MapPin, Phone, Loader2, CheckCircle } from 'lucide-react';
 import { useNewsletter } from '../hooks/useContact';
 
 export default function Footer() {
@@ -42,22 +42,7 @@ export default function Footer() {
               富山県内の最適なウェルネスソリューションを、<br />
               見て、触れて、実感してください。
             </p>
-            <div className="flex gap-4" role="list" aria-label="ソーシャルメディア">
-              {[
-                { Icon: Instagram, label: 'Instagram' },
-                { Icon: Twitter, label: 'Twitter' },
-                { Icon: Facebook, label: 'Facebook' }
-              ].map(({ Icon, label }) => (
-                <a
-                  key={label}
-                  href="#"
-                  className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-emerald-50 hover:text-emerald-500 transition-colors duration-300"
-                  aria-label={`${label}でフォロー`}
-                >
-                  <Icon className="w-5 h-5" aria-hidden="true" />
-                </a>
-              ))}
-            </div>
+            {/* SNSリンクは実際のアカウント作成後に追加予定 */}
           </div>
 
           <div className="bg-gray-50/80 backdrop-blur-sm rounded-3xl p-8 border border-white/50 shadow-sm">

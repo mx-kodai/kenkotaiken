@@ -1,72 +1,59 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import BentoGrid from '../components/BentoGrid';
-import { Stethoscope, Dumbbell, Sparkles, Brain } from 'lucide-react';
+import dynamic from 'next/dynamic';
+import PageHero from '../components/PageHero';
+import ProductCard from '../components/ProductCard';
+import { categories, products } from '../data/mockData';
 
-// Using the same categories data structure as updated in page.js
-// Ideally this should be imported from a shared data source or fetched
-const categories = [
-    {
-        id: 1,
-        title: '健康診断・測定',
-        description: 'プロ仕様の機器で体の状態をチェック',
-        image: '/images/cat-health.png',
-        href: '/categories/diagnosis',
-        icon: Stethoscope
-    },
-    {
-        id: 2,
-        title: 'フィットネス・運動',
-        description: '楽しく続けられる運動習慣',
-        image: '/images/cat-fitness.png',
-        href: '/categories/fitness',
-        icon: Dumbbell
-    },
-    {
-        id: 3,
-        title: 'リラクゼーション',
-        description: '心と体を癒やす究極の体験',
-        image: '/images/cat-relaxation.png',
-        href: '/categories/relaxation',
-        icon: Sparkles
-    },
-    {
-        id: 4,
-        title: 'メンタルケア',
-        description: 'ストレスフリーな毎日へ',
-        image: '/images/cat-mental.png',
-        href: '/categories/mental',
-        icon: Brain
-    }
-];
+const BentoGrid = dynamic(() => import('../components/BentoGrid'), { ssr: false });
+
+// BentoGrid用にカテゴリデータを変換
+const categoryItems = categories.map(cat => ({
+    id: cat.id,
+    title: cat.name,
+    description: cat.description || '',
+    href: `/categories/${cat.slug}`,
+    image: `/images/categories/${cat.slug}.jpg`,
+}));
 
 export default function CategoriesPage() {
     return (
         <div className="min-h-screen bg-gray-50">
-            <div className="bg-gradient-to-br from-emerald-500 to-teal-700 py-20 text-white relative overflow-hidden">
-                <div className="absolute inset-0 bg-[url('/images/mesh_gradient_background.png')] opacity-30 bg-cover bg-center" />
-                <div className="container mx-auto px-4 relative z-10 text-center">
-                    <motion.h1
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="text-4xl md:text-6xl font-bold mb-4"
-                    >
-                        Categories
-                    </motion.h1>
-                    <motion.p
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1 }}
-                        className="text-xl text-emerald-100 max-w-2xl mx-auto"
-                    >
-                        あなたの目的に合わせた豊富な体験カテゴリー
-                    </motion.p>
-                </div>
-            </div>
+            <PageHero
+                title="Find Your Experience"
+                subtitle="体験を探す"
+                image="/images/hero-search.png"
+                description="気になるカテゴリから探すか、すべての体験から新しい発見を見つけましょう。あなたの健康ライフスタイルにぴったりの体験がここにあります。"
+            />
 
-            <div className="container mx-auto px-4 py-16">
-                <BentoGrid items={categories} />
+            <div className="container mx-auto px-4 py-16 relative z-20 -mt-10">
+                {/* Categories Section */}
+                <div className="mb-20">
+                    <div className="flex items-center gap-4 mb-8">
+                        <div className="h-10 w-2 bg-emerald-500 rounded-full" />
+                        <h2 className="text-2xl font-bold text-gray-800">カテゴリから探す</h2>
+                    </div>
+                    <BentoGrid items={categoryItems} />
+                </div>
+
+                {/* All Products Section */}
+                <div>
+                    <div className="flex items-center justify-between mb-8 border-b border-gray-200 pb-4">
+                        <div className="flex items-center gap-4">
+                            <div className="h-10 w-2 bg-emerald-500 rounded-full" />
+                            <h2 className="text-2xl font-bold text-gray-800">すべての体験一覧</h2>
+                        </div>
+                        <span className="text-gray-500 font-medium">{products.length} Items</span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                        {products.map((product) => (
+                            <div key={product.id} className="h-full">
+                                <ProductCard product={product} />
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </div>
         </div>
     );

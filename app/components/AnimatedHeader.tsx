@@ -3,13 +3,12 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Search, Menu, X, User } from 'lucide-react';
+import { Menu, X, User, Stethoscope } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function AnimatedHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [showSearch, setShowSearch] = useState(false);
   const pathname = usePathname();
 
   // Pages that require a dark header (text-gray-600) even at top position
@@ -25,19 +24,19 @@ export default function AnimatedHeader() {
 
   const navLinks = [
     { name: 'ホーム', href: '/' },
-    { name: 'カテゴリー', href: '/categories' },
+    { name: '体験を探す', href: '/products' },
     { name: '体験レポート', href: '/reports' },
     { name: '体験場所', href: '/locations' },
     { name: 'イベント', href: '/events' },
   ];
 
   // Determine styles based on state
-  const isDarkText = isScrolled || isLightPage || showSearch;
-  const headerBgClass = isScrolled || showSearch
-    ? 'bg-white/90 backdrop-blur-md shadow-sm py-2'
+  const isDarkText = isScrolled || isLightPage;
+  const headerBgClass = isScrolled
+    ? 'bg-white/90 backdrop-blur-md shadow-sm'
     : isLightPage
-      ? 'bg-transparent py-4'
-      : 'bg-transparent py-4 bg-gradient-to-b from-black/50 to-transparent'; // Add gradient for legibility on dark heroes
+      ? 'bg-transparent'
+      : 'bg-transparent bg-gradient-to-b from-black/50 to-transparent';
 
   const textColorClass = isDarkText ? 'text-gray-700' : 'text-white drop-shadow-sm';
   const logoTextClass = isDarkText
@@ -48,10 +47,10 @@ export default function AnimatedHeader() {
     <>
       <header
         role="banner"
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${headerBgClass}`}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 h-14 ${headerBgClass}`}
       >
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between">
+        <div className="container mx-auto px-4 h-full">
+          <div className="flex items-center justify-between h-full">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 z-50 group">
               <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition-transform duration-300">
@@ -77,19 +76,18 @@ export default function AnimatedHeader() {
 
             {/* Actions */}
             <div className="hidden md:flex items-center gap-2">
-              <button
-                className={`p-2 rounded-full hover:bg-white/20 transition-colors duration-300 ${textColorClass}`}
-                onClick={() => setShowSearch(!showSearch)}
-                aria-label="検索を開く"
-                aria-expanded={showSearch}
+              <Link
+                href="/diagnosis"
+                className="flex items-center gap-2 px-4 py-2 text-sm font-bold rounded-lg transition-all bg-emerald-500 text-white hover:bg-emerald-600 shadow-lg shadow-emerald-500/30"
               >
-                <Search className="w-5 h-5" aria-hidden="true" />
-              </button>
+                <Stethoscope className="w-4 h-4" />
+                無料診断
+              </Link>
               <Link
                 href="/mypage"
                 className={`flex items-center gap-2 px-4 py-2 text-sm font-bold rounded-lg transition-all shadow-sm ${isDarkText
-                    ? 'text-emerald-700 bg-emerald-50 hover:bg-emerald-100'
-                    : 'text-emerald-800 bg-white/90 hover:bg-white backdrop-blur-sm'
+                  ? 'text-emerald-700 bg-emerald-50 hover:bg-emerald-100'
+                  : 'text-emerald-800 bg-white/90 hover:bg-white backdrop-blur-sm'
                   }`}
               >
                 <User className="w-4 h-4" />
@@ -106,43 +104,13 @@ export default function AnimatedHeader() {
               aria-controls="mobile-menu"
             >
               {isMobileMenuOpen ? (
-                <X aria-hidden="true" className="text-gray-800" /> /* Always dark when menu is open */
+                <X aria-hidden="true" className="text-gray-800" />
               ) : (
                 <Menu aria-hidden="true" />
               )}
             </button>
           </div>
         </div>
-
-        {/* Search Bar Overlay */}
-        <AnimatePresence>
-          {showSearch && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              className="absolute top-full left-0 right-0 bg-white border-b border-gray-100 overflow-hidden shadow-lg"
-            >
-              <div className="container mx-auto px-4 py-4">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                  <input
-                    type="text"
-                    placeholder="キーワードで検索..."
-                    className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-base"
-                    autoFocus
-                  />
-                  <button
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                    onClick={() => setShowSearch(false)}
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </header>
 
       {/* Mobile Menu Overlay */}
@@ -160,16 +128,6 @@ export default function AnimatedHeader() {
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
           >
             <nav className="flex flex-col gap-2" aria-label="モバイルナビゲーション">
-              <div className="relative mb-6">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" aria-hidden="true" />
-                <input
-                  type="text"
-                  placeholder="検索..."
-                  aria-label="サイト内検索"
-                  className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-base"
-                />
-              </div>
-
               {navLinks.map((link) => (
                 <Link
                   key={link.name}
@@ -183,6 +141,14 @@ export default function AnimatedHeader() {
               ))}
 
               <div className="mt-8 flex flex-col gap-3">
+                <Link
+                  href="/diagnosis"
+                  className="w-full py-3 text-center bg-emerald-500 text-white font-bold rounded-lg hover:bg-emerald-600 flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/30"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <Stethoscope className="w-5 h-5" />
+                  無料診断
+                </Link>
                 <Link
                   href="/mypage"
                   className="w-full py-3 text-center bg-emerald-50 text-emerald-700 font-bold rounded-lg hover:bg-emerald-100 flex items-center justify-center gap-2"

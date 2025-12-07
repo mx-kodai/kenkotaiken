@@ -180,30 +180,42 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Products */}
-      <section className="py-24 bg-gray-50/50 backdrop-blur-sm relative z-10 border-y border-white/50">
+      {/* Featured Products - Horizontal Scroll on Mobile */}
+      <section className="py-16 md:py-24 bg-gray-50/50 backdrop-blur-sm relative z-10 border-y border-white/50 overflow-hidden">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-12">
+          <div className="flex items-center justify-between mb-8 md:mb-12">
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">人気のおすすめ体験</h2>
-              <p className="text-gray-600">今週注目されている無料体験アイテム</p>
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">人気のおすすめ体験</h2>
+              <p className="text-sm md:text-base text-gray-600">今週注目されている無料体験アイテム</p>
             </div>
             <Link href="/products" className="hidden md:flex items-center gap-2 text-emerald-600 font-bold hover:text-emerald-700 transition">
               すべて見る <ArrowRight className="w-5 h-5" />
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {products.slice(0, 4).map((product) => (
-              <div key={product.id} className="h-full">
-                <ProductCard product={product} />
+          {/* Desktop Grid / Mobile Scroll Container */}
+          <div className="relative -mx-4 px-4 md:mx-0 md:px-0">
+            <div className="flex md:grid md:grid-cols-4 gap-4 md:gap-8 overflow-x-auto pb-8 md:pb-0 snap-x snap-mandatory hide-scrollbar">
+              {products.slice(0, 5).map((product) => (
+                <div key={product.id} className="min-w-[160px] md:min-w-0 w-[45%] md:w-auto h-full snap-start flex-shrink-0">
+                  <ProductCard product={product} />
+                </div>
+              ))}
+              {/* Mobile 'More' Card */}
+              <div className="min-w-[120px] md:hidden snap-start flex-shrink-0 flex items-center justify-center">
+                <Link href="/products" className="flex flex-col items-center gap-2 text-gray-400 group">
+                  <div className="w-12 h-12 rounded-full bg-white border border-gray-200 flex items-center justify-center shadow-sm group-hover:border-emerald-500 group-hover:text-emerald-500 transition-colors">
+                    <ArrowRight className="w-5 h-5" />
+                  </div>
+                  <span className="text-xs font-bold">もっと見る</span>
+                </Link>
               </div>
-            ))}
+            </div>
           </div>
 
-          <div className="mt-8 text-center md:hidden">
-            <Link href="/products" className="inline-flex items-center gap-2 text-emerald-600 font-bold">
-              すべて見る <ArrowRight className="w-5 h-5" />
+          <div className="mt-4 text-center md:hidden">
+            <Link href="/products" className="inline-flex items-center gap-2 text-emerald-600 font-bold text-sm">
+              すべての商品を見る <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </div>
