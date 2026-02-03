@@ -48,7 +48,7 @@ function SearchPageContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 pt-14">
       <div className="bg-gradient-to-r from-emerald-400 to-blue-500 text-white">
         <div className="container mx-auto px-4 py-16">
           <div className="max-w-2xl mx-auto text-center">

@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowLeft, Star, MapPin, Phone, Clock, Users, Calendar, CheckCircle, Navigation, Heart, Share2, ThumbsUp, Loader2 } from 'lucide-react';
 import ProductCard from '../../components/ProductCard';
+import Breadcrumbs from '../../components/Breadcrumbs';
 import { experienceLocations, products } from '../../data/mockData';
 import { useLikes, useFavorites } from '../../hooks/useFavorites';
 import { useShare } from '../../hooks/useShare';
@@ -21,12 +22,12 @@ export default function LocationDetailPage({ params }) {
   const { shareToTwitter, shareToFacebook, shareToLine, copyLink } = useShare();
   const { reviews, isLoading: reviewsLoading, markHelpful, hasMarkedHelpful } = useReviews(params.id, 'location');
   const { createReservation, isSubmitting: reservationSubmitting } = useReservation();
-  
+
   const location = experienceLocations.find(l => l.id === params.id);
-  
+
   if (!location) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 pt-14 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-800 mb-4">体験場所が見つかりません</h1>
           <Link href="/locations" className="text-emerald-600 hover:text-emerald-700">
@@ -38,7 +39,7 @@ export default function LocationDetailPage({ params }) {
   }
 
   const availableTimes = ['10:00', '11:00', '13:00', '14:00', '15:00', '16:00'];
-  
+
   const relatedLocations = experienceLocations
     .filter(l => l.id !== location.id && l.city === location.city)
     .slice(0, 3);
@@ -99,17 +100,13 @@ export default function LocationDetailPage({ params }) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 pt-14">
       <div className="container mx-auto px-4 py-8">
-        <div className="mb-6">
-          <Link 
-            href="/locations" 
-            className="inline-flex items-center text-gray-600 hover:text-emerald-600 transition"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            体験場所一覧に戻る
-          </Link>
-        </div>
+
+        <Breadcrumbs items={[
+          { label: '体験場所一覧', href: '/locations' },
+          { label: location.name }
+        ]} />
 
         <div className="bg-white rounded-lg shadow-sm overflow-hidden">
           <div className="aspect-[16/9] relative bg-gray-100">
@@ -123,9 +120,8 @@ export default function LocationDetailPage({ params }) {
               <button
                 onClick={toggleLike}
                 disabled={likeLoading}
-                className={`p-2 rounded-full backdrop-blur-sm transition flex items-center gap-1 ${
-                  isLiked ? 'bg-red-100/80 text-red-600' : 'bg-white/80 text-gray-600 hover:bg-red-50/80'
-                }`}
+                className={`p-2 rounded-full backdrop-blur-sm transition flex items-center gap-1 ${isLiked ? 'bg-red-100/80 text-red-600' : 'bg-white/80 text-gray-600 hover:bg-red-50/80'
+                  }`}
               >
                 <Heart className={`h-5 w-5 ${isLiked ? 'fill-current' : ''}`} />
                 {likeCount > 0 && <span className="text-sm">{likeCount}</span>}
@@ -154,18 +150,18 @@ export default function LocationDetailPage({ params }) {
                 <h1 className="text-3xl font-bold text-gray-800 mb-2">
                   {location.name}
                 </h1>
-                
+
                 <div className="space-y-2 mb-4">
                   <div className="flex items-center gap-2 text-gray-600">
                     <MapPin className="h-5 w-5" />
                     <span>{location.address}</span>
                   </div>
-                  
+
                   <div className="flex items-center gap-2 text-gray-600">
                     <Clock className="h-5 w-5" />
                     <span>{location.openingHours}</span>
                   </div>
-                  
+
                   <div className="flex items-center gap-2 text-gray-600">
                     <Phone className="h-5 w-5" />
                     <span>{location.phone}</span>
@@ -178,7 +174,7 @@ export default function LocationDetailPage({ params }) {
                     <span className="font-medium text-lg">{location.rating}</span>
                     <span className="text-gray-600">({location.reviews.length}件のレビュー)</span>
                   </div>
-                  
+
                   <div className="flex items-center gap-2 text-purple-600">
                     <Users className="h-5 w-5" />
                     <span className="font-medium">カップル・家族歓迎</span>
@@ -215,17 +211,17 @@ export default function LocationDetailPage({ params }) {
                               <p className="text-sm text-gray-600">{product.company.name}</p>
                             </div>
                           </div>
-                          
+
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-1">
                               <Star className="h-4 w-4 text-yellow-400 fill-current" />
                               <span className="text-sm font-medium">{product.rating}</span>
                             </div>
-                            
+
                             <div className="flex flex-wrap gap-1">
                               {product.tags.slice(0, 2).map(tag => (
-                                <span 
-                                  key={tag} 
+                                <span
+                                  key={tag}
                                   className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded"
                                 >
                                   {tag}
@@ -237,7 +233,7 @@ export default function LocationDetailPage({ params }) {
                       </Link>
                     ))}
                   </div>
-                  
+
                   {location.products.length > 4 && (
                     <div className="text-center mt-4">
                       <button className="text-emerald-600 hover:text-emerald-700 font-medium">
@@ -257,7 +253,7 @@ export default function LocationDetailPage({ params }) {
                         <p className="text-sm text-green-700">二人以上での体験を歓迎。専用スペースもご用意</p>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-start gap-3 p-4 bg-blue-50 rounded-lg">
                       <CheckCircle className="h-5 w-5 text-blue-500 mt-0.5 flex-none" />
                       <div>
@@ -265,7 +261,7 @@ export default function LocationDetailPage({ params }) {
                         <p className="text-sm text-blue-700">無料駐車場あり。お車でのアクセスも安心</p>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-start gap-3 p-4 bg-purple-50 rounded-lg">
                       <CheckCircle className="h-5 w-5 text-purple-500 mt-0.5 flex-none" />
                       <div>
@@ -273,7 +269,7 @@ export default function LocationDetailPage({ params }) {
                         <p className="text-sm text-purple-700">経験豊富なスタッフがサポート</p>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-start gap-3 p-4 bg-orange-50 rounded-lg">
                       <CheckCircle className="h-5 w-5 text-orange-500 mt-0.5 flex-none" />
                       <div>
@@ -321,11 +317,10 @@ export default function LocationDetailPage({ params }) {
                                   {[...Array(5)].map((_, i) => (
                                     <Star
                                       key={i}
-                                      className={`h-4 w-4 ${
-                                        i < review.rating
-                                          ? 'text-yellow-400 fill-current'
-                                          : 'text-gray-300'
-                                      }`}
+                                      className={`h-4 w-4 ${i < review.rating
+                                        ? 'text-yellow-400 fill-current'
+                                        : 'text-gray-300'
+                                        }`}
                                     />
                                   ))}
                                 </div>
@@ -341,11 +336,10 @@ export default function LocationDetailPage({ params }) {
                                 <button
                                   onClick={() => markHelpful(review.id)}
                                   disabled={hasMarkedHelpful(review.id)}
-                                  className={`flex items-center gap-1 transition ${
-                                    hasMarkedHelpful(review.id)
-                                      ? 'text-emerald-600'
-                                      : 'hover:text-emerald-600'
-                                  }`}
+                                  className={`flex items-center gap-1 transition ${hasMarkedHelpful(review.id)
+                                    ? 'text-emerald-600'
+                                    : 'hover:text-emerald-600'
+                                    }`}
                                 >
                                   <ThumbsUp className="h-4 w-4" />
                                   参考になった ({review.helpful})
@@ -371,7 +365,7 @@ export default function LocationDetailPage({ params }) {
               <div>
                 <div className="bg-gray-50 rounded-lg p-6 sticky top-4">
                   <h3 className="text-lg font-semibold text-gray-800 mb-4">予約・お問い合わせ</h3>
-                  
+
                   <div className="space-y-4 mb-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -385,10 +379,10 @@ export default function LocationDetailPage({ params }) {
                         <option value="">日付を選択</option>
                         {getNextWeekDates().map(date => (
                           <option key={date.toISOString()} value={date.toISOString()}>
-                            {date.toLocaleDateString('ja-JP', { 
-                              month: 'short', 
-                              day: 'numeric', 
-                              weekday: 'short' 
+                            {date.toLocaleDateString('ja-JP', {
+                              month: 'short',
+                              day: 'numeric',
+                              weekday: 'short'
                             })}
                           </option>
                         ))}
@@ -430,7 +424,7 @@ export default function LocationDetailPage({ params }) {
                         '体験予約をする'
                       )}
                     </button>
-                    
+
                     <button className="w-full border border-gray-300 text-gray-700 px-4 py-3 rounded-lg hover:bg-gray-50 transition">
                       電話で問い合わせ
                     </button>

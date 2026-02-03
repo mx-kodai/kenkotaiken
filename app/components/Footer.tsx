@@ -96,30 +96,30 @@ export default function Footer() {
         {/* Middle Section: Links */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12 py-12 border-t border-gray-100">
           <div>
-            <h4 className="font-bold text-gray-800 mb-6">サービス</h4>
+            <h4 className="font-bold text-gray-800 mb-6">体験を探す</h4>
             <ul className="space-y-4">
-              <li><Link href="/products" className="text-gray-500 hover:text-emerald-600 transition-colors text-sm font-medium block p-1 -ml-1 hover:bg-emerald-50 rounded-lg w-fit px-3">体験商品一覧</Link></li>
-              <li><Link href="/locations" className="text-gray-500 hover:text-emerald-600 transition-colors text-sm font-medium block p-1 -ml-1 hover:bg-emerald-50 rounded-lg w-fit px-3">体験スポットを探す</Link></li>
-              <li><Link href="/events" className="text-gray-500 hover:text-emerald-600 transition-colors text-sm font-medium block p-1 -ml-1 hover:bg-emerald-50 rounded-lg w-fit px-3">イベント情報</Link></li>
-              <li><Link href="/categories" className="text-gray-500 hover:text-emerald-600 transition-colors text-sm font-medium block p-1 -ml-1 hover:bg-emerald-50 rounded-lg w-fit px-3">カテゴリーから探す</Link></li>
+              <li><Link href="/products" className="text-gray-500 hover:text-emerald-600 transition-colors text-sm font-medium block p-1 -ml-1 hover:bg-emerald-50 rounded-lg w-fit px-3">体験一覧</Link></li>
+              <li><Link href="/concerns" className="text-gray-500 hover:text-emerald-600 transition-colors text-sm font-medium block p-1 -ml-1 hover:bg-emerald-50 rounded-lg w-fit px-3">お悩みから探す</Link></li>
+              <li><Link href="/ranking" className="text-gray-500 hover:text-emerald-600 transition-colors text-sm font-medium block p-1 -ml-1 hover:bg-emerald-50 rounded-lg w-fit px-3">人気ランキング</Link></li>
+              <li><Link href="/diagnosis" className="text-gray-500 hover:text-emerald-600 transition-colors text-sm font-medium block p-1 -ml-1 hover:bg-emerald-50 rounded-lg w-fit px-3">無料診断</Link></li>
             </ul>
           </div>
           <div>
-            <h4 className="font-bold text-gray-800 mb-6">体験・診断</h4>
+            <h4 className="font-bold text-gray-800 mb-6">体験する</h4>
             <ul className="space-y-4">
-              <li><Link href="/diagnosis" className="text-gray-500 hover:text-emerald-600 transition-colors text-sm font-medium block p-1 -ml-1 hover:bg-emerald-50 rounded-lg w-fit px-3">健康診断・チェック</Link></li>
-              <li><Link href="/concerns" className="text-gray-500 hover:text-emerald-600 transition-colors text-sm font-medium block p-1 -ml-1 hover:bg-emerald-50 rounded-lg w-fit px-3">悩み別ガイド</Link></li>
-              <li><Link href="/reports" className="text-gray-500 hover:text-emerald-600 transition-colors text-sm font-medium block p-1 -ml-1 hover:bg-emerald-50 rounded-lg w-fit px-3">みんなの体験レポート</Link></li>
-              <li><Link href="/ranking" className="text-gray-500 hover:text-emerald-600 transition-colors text-sm font-medium block p-1 -ml-1 hover:bg-emerald-50 rounded-lg w-fit px-3">人気ランキング</Link></li>
+              <li><Link href="/locations" className="text-gray-500 hover:text-emerald-600 transition-colors text-sm font-medium block p-1 -ml-1 hover:bg-emerald-50 rounded-lg w-fit px-3">体験場所</Link></li>
+              <li><Link href="/events" className="text-gray-500 hover:text-emerald-600 transition-colors text-sm font-medium block p-1 -ml-1 hover:bg-emerald-50 rounded-lg w-fit px-3">イベント</Link></li>
+              <li><Link href="/reports" className="text-gray-500 hover:text-emerald-600 transition-colors text-sm font-medium block p-1 -ml-1 hover:bg-emerald-50 rounded-lg w-fit px-3">体験レポート</Link></li>
+              <li><Link href="/mypage" className="text-gray-500 hover:text-emerald-600 transition-colors text-sm font-medium block p-1 -ml-1 hover:bg-emerald-50 rounded-lg w-fit px-3">マイページ</Link></li>
             </ul>
           </div>
           <div>
             <h4 className="font-bold text-gray-800 mb-6">サポート</h4>
             <ul className="space-y-4">
-              <li><Link href="/about" className="text-gray-500 hover:text-emerald-600 transition-colors text-sm font-medium block p-1 -ml-1 hover:bg-emerald-50 rounded-lg w-fit px-3">WellNaviについて</Link></li>
               <li><Link href="/how-to-use" className="text-gray-500 hover:text-emerald-600 transition-colors text-sm font-medium block p-1 -ml-1 hover:bg-emerald-50 rounded-lg w-fit px-3">ご利用ガイド</Link></li>
               <li><Link href="/faq" className="text-gray-500 hover:text-emerald-600 transition-colors text-sm font-medium block p-1 -ml-1 hover:bg-emerald-50 rounded-lg w-fit px-3">よくある質問</Link></li>
               <li><Link href="/contact" className="text-gray-500 hover:text-emerald-600 transition-colors text-sm font-medium block p-1 -ml-1 hover:bg-emerald-50 rounded-lg w-fit px-3">お問い合わせ</Link></li>
+              <li><Link href="/partner" className="text-gray-500 hover:text-emerald-600 transition-colors text-sm font-medium block p-1 -ml-1 hover:bg-emerald-50 rounded-lg w-fit px-3">掲載パートナー募集</Link></li>
             </ul>
           </div>
           <div>
@@ -134,8 +134,8 @@ export default function Footer() {
                 <span>076-000-0000</span>
               </li>
               <li className="pt-2">
-                <Link href="/partner" className="inline-block bg-gray-900 text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-gray-800 transition shadow-lg shadow-gray-200">
-                  掲載パートナー募集
+                <Link href="/contact" className="inline-block bg-emerald-500 text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-emerald-600 transition shadow-lg shadow-emerald-500/30">
+                  お問い合わせ
                 </Link>
               </li>
             </ul>

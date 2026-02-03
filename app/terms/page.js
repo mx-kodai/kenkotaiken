@@ -68,7 +68,7 @@ export default function TermsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 pt-14">
       <div className="bg-gradient-to-r from-gray-700 to-gray-900 text-white">
         <div className="container mx-auto px-4 py-16">
           <div className="text-center">

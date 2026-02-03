@@ -42,7 +42,7 @@ export default function BusinessPage() {
     const [companyEvents] = useState(experienceEvents.slice(0, 2));
 
     return (
-        <div className="min-h-screen bg-gray-50 pb-20">
+        <div className="min-h-screen bg-gray-50 pt-14 pb-20">
             {/* Header */}
             <div className="bg-gradient-to-r from-gray-900 to-gray-800 text-white">
                 <div className="container mx-auto px-4 py-12">

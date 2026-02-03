@@ -2,6 +2,7 @@ import { Geist, Geist_Mono, Zen_Kaku_Gothic_New } from "next/font/google";
 import "./globals.css";
 import AnimatedHeader from "./components/AnimatedHeader";
 import Footer from "./components/Footer";
+import BottomNav from "./components/BottomNav";
 import Providers from "./components/Providers";
 
 const geistSans = Geist({
@@ -38,6 +39,7 @@ export default function RootLayout({ children }) {
             {children}
           </main>
           <Footer />
+          <BottomNav />
         </Providers>
       </body>
     </html>

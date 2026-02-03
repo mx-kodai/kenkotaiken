@@ -55,6 +55,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           setIsLiked(!isLiked);
         }}
         className="absolute top-2 right-2 p-2 rounded-full bg-white/90 backdrop-blur-sm shadow-sm hover:bg-white transition-all active:scale-95 z-10"
+        aria-label={isLiked ? "お気に入りから削除" : "お気に入りに追加"}
       >
         <Heart
           className={`w-4 h-4 transition-colors ${isLiked ? 'text-red-500 fill-red-500' : 'text-gray-400'}`}

@@ -35,19 +35,22 @@ export default function ExperienceReportsPage() {
 
       <div className="container mx-auto px-4 py-8">
         {/* Filters */}
-        <div className="flex flex-wrap justify-center gap-4 mb-12">
-          {filters.map(filter => (
-            <button
-              key={filter.value}
-              onClick={() => setSelectedFilter(filter.value)}
-              className={`px-6 py-3 rounded-full font-bold transition-all ${selectedFilter === filter.value
-                ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/30 scale-105'
-                : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
-                }`}
-            >
-              {filter.label}
-            </button>
-          ))}
+        {/* Filters - Horizontal Scroll */}
+        <div className="mb-12 -mx-4 px-4 overflow-x-auto hide-scrollbar">
+          <div className="flex gap-3 min-w-max pb-2 md:justify-center">
+            {filters.map(filter => (
+              <button
+                key={filter.value}
+                onClick={() => setSelectedFilter(filter.value)}
+                className={`px-6 py-3 rounded-full font-bold transition-all whitespace-nowrap ${selectedFilter === filter.value
+                  ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/30 scale-105'
+                  : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
+                  }`}
+              >
+                {filter.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Reports Grid */}

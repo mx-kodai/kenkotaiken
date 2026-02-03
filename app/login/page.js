@@ -62,7 +62,7 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="min-h-screen bg-gray-50 pt-14 flex items-center justify-center p-4">
             <div className="absolute inset-0 z-0 overflow-hidden">
                 <div className="absolute -top-40 -right-40 w-96 h-96 bg-emerald-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
                 <div className="absolute top-40 -left-40 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
@@ -84,42 +84,12 @@ export default function LoginPage() {
                     <p className="text-gray-500 mt-2">アカウントにログインして体験を始めましょう</p>
                 </div>
 
-                {/* (ダミー) デモ用ログイン情報 */}
+                {/* Demo Info Hidden for Production/Professional Look */}
+                {/* 
                 <div className="mb-6 p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-sm">
-                    <p className="font-bold text-emerald-700 mb-2">デモ用アカウント</p>
-                    <div className="flex items-center justify-between gap-2 mb-2">
-                        <p className="text-emerald-600">メール: <span className="font-mono bg-white px-2 py-0.5 rounded">{demoEmail}</span></p>
-                        <button
-                            type="button"
-                            onClick={() => copyToClipboard(demoEmail, 'email')}
-                            className="p-1.5 rounded-lg hover:bg-emerald-100 transition-colors"
-                            title="メールをコピー"
-                        >
-                            {copiedEmail ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4 text-emerald-500" />}
-                        </button>
-                    </div>
-                    <div className="flex items-center justify-between gap-2 mb-3">
-                        <p className="text-emerald-600">
-                            パスワード: <span className="font-mono bg-white px-2 py-0.5 rounded">{demoPassword}</span>
-                        </p>
-                        <button
-                            type="button"
-                            onClick={() => copyToClipboard(demoPassword, 'password')}
-                            className="p-1.5 rounded-lg hover:bg-emerald-100 transition-colors"
-                            title="パスワードをコピー"
-                        >
-                            {copiedPassword ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4 text-emerald-500" />}
-                        </button>
-                    </div>
-                    <button
-                        type="button"
-                        onClick={() => { setEmail(demoEmail); setPassword(demoPassword); }}
-                        className="w-full bg-emerald-500 text-white font-bold py-2 rounded-lg hover:bg-emerald-600 transition-colors text-xs flex items-center justify-center gap-2"
-                    >
-                        <Zap className="w-4 h-4" />
-                        デモ情報を自動入力
-                    </button>
-                </div>
+                   ... (Hidden)
+                </div> 
+                */}
 
                 {error && (
                     <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm">

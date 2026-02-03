@@ -3,8 +3,9 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowLeft, Star, Heart, MapPin, Phone, Clock, Users, Share2, Calendar, CheckCircle, Info, ThumbsUp, Loader2 } from 'lucide-react';
+import { ArrowLeft, Star, Heart, MapPin, Phone, Clock, Users, Share2, Calendar, CheckCircle, Info, ThumbsUp, Loader2, Link as LinkIcon } from 'lucide-react';
 import ProductCard from '../../components/ProductCard';
+import Breadcrumbs from '../../components/Breadcrumbs';
 import { products, experienceLocations } from '../../data/mockData';
 import { useLikes, useFavorites } from '../../hooks/useFavorites';
 import { useShare } from '../../hooks/useShare';
@@ -19,12 +20,12 @@ export default function ProductDetailPage({ params }) {
   const { isFavorite, toggleFavorite, isLoading: favoriteLoading } = useFavorites(params.id, 'product');
   const { shareToTwitter, shareToFacebook, shareToLine, copyLink, isSharing } = useShare();
   const { reviews, isLoading: reviewsLoading, markHelpful, hasMarkedHelpful } = useReviews(params.id, 'product');
-  
+
   const product = products.find(p => p.id === params.id);
-  
+
   if (!product) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 pt-14 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-800 mb-4">商品が見つかりません</h1>
           <Link href="/products" className="text-emerald-600 hover:text-emerald-700">
@@ -80,16 +81,13 @@ export default function ProductDetailPage({ params }) {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 pt-14">
       <div className="container mx-auto px-4 py-8">
         <div className="mb-6">
-          <Link 
-            href="/products" 
-            className="inline-flex items-center text-gray-600 hover:text-emerald-600 transition"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            商品一覧に戻る
-          </Link>
+          <Breadcrumbs items={[
+            { label: '商品一覧', href: '/products' },
+            { label: product.name }
+          ]} />
         </div>
 
         <div className="bg-white rounded-lg shadow-sm overflow-hidden">
@@ -103,16 +101,15 @@ export default function ProductDetailPage({ params }) {
                   className="object-cover"
                 />
               </div>
-              
+
               {product.images.length > 1 && (
                 <div className="flex gap-2 overflow-x-auto">
                   {product.images.map((image, index) => (
                     <button
                       key={index}
                       onClick={() => setSelectedImage(index)}
-                      className={`flex-none w-20 h-20 rounded-lg overflow-hidden border-2 transition ${
-                        selectedImage === index ? 'border-emerald-500' : 'border-gray-200'
-                      }`}
+                      className={`flex-none w-20 h-20 rounded-lg overflow-hidden border-2 transition ${selectedImage === index ? 'border-emerald-500' : 'border-gray-200'
+                        }`}
                     >
                       <Image
                         src={image}
@@ -140,14 +137,13 @@ export default function ProductDetailPage({ params }) {
                     by {product.company.name}
                   </div>
                 </div>
-                
+
                 <div className="flex items-center gap-2">
                   <button
                     onClick={handleLike}
                     disabled={likeLoading}
-                    className={`p-2 rounded-full transition flex items-center gap-1 ${
-                      isLiked ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-600 hover:bg-red-50'
-                    }`}
+                    className={`p-2 rounded-full transition flex items-center gap-1 ${isLiked ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-600 hover:bg-red-50'
+                      }`}
                   >
                     <Heart className={`h-5 w-5 ${isLiked ? 'fill-current' : ''}`} />
                     {likeCount > 0 && <span className="text-sm">{likeCount}</span>}
@@ -197,52 +193,67 @@ export default function ProductDetailPage({ params }) {
 
                 <div className="flex flex-wrap gap-2">
                   {product.experienceType.map(type => (
-                    <span 
-                      key={type} 
+                    <span
+                      key={type}
                       className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm"
                     >
-                      {type === 'visit' ? '店舗体験' : 
-                       type === 'delivery' ? '自宅お試し' :
-                       type === 'consultation' ? '相談' : 'オンライン'}
+                      {type === 'visit' ? '店舗体験' :
+                        type === 'delivery' ? '自宅お試し' :
+                          type === 'consultation' ? '相談' : 'オンライン'}
                     </span>
                   ))}
                 </div>
               </div>
 
               <div className="flex gap-3">
-                <Link
-                  href="#locations"
-                  className="flex-1 bg-emerald-500 text-white px-6 py-3 rounded-lg hover:bg-emerald-600 transition font-medium text-center"
-                >
-                  体験場所を見る
-                </Link>
+                {product.experienceType.includes('visit') ? (
+                  <Link
+                    href="#locations"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setActiveTab('locations');
+                      document.getElementById('locations')?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                    className="flex-1 bg-emerald-500 text-white px-6 py-3 rounded-lg hover:bg-emerald-600 transition font-medium text-center flex items-center justify-center shadow-lg shadow-emerald-500/20"
+                  >
+                    <MapPin className="w-5 h-5 mr-2" />
+                    体験場所を見る
+                  </Link>
+                ) : (
+                  <button
+                    onClick={() => alert('デモ: 外部の購入/申込ページへ遷移します')}
+                    className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition font-medium text-center flex items-center justify-center shadow-lg shadow-blue-500/20"
+                  >
+                    <LinkIcon className="w-5 h-5 mr-2" />
+                    公式サイトで申し込む
+                  </button>
+                )}
+
                 <button
                   onClick={toggleFavorite}
                   disabled={favoriteLoading}
-                  className={`flex-1 border px-6 py-3 rounded-lg transition font-medium flex items-center justify-center gap-2 ${
-                    isFavorite
-                      ? 'bg-emerald-500 text-white border-emerald-500'
-                      : 'border-emerald-500 text-emerald-600 hover:bg-emerald-50'
-                  }`}
+                  className={`flex-none w-14 flex items-center justify-center border rounded-lg transition ${isFavorite
+                    ? 'bg-red-50 text-red-500 border-red-200'
+                    : 'border-gray-200 text-gray-400 hover:bg-gray-50'
+                    }`}
+                  title={isFavorite ? 'お気に入り解除' : 'お気に入り追加'}
                 >
-                  <Heart className={`h-5 w-5 ${isFavorite ? 'fill-current' : ''}`} />
-                  {isFavorite ? 'お気に入り済み' : 'お気に入りに追加'}
+                  <Heart className={`h-6 w-6 ${isFavorite ? 'fill-current' : ''}`} />
                 </button>
               </div>
             </div>
           </div>
 
           <div className="border-t">
-            <div className="flex border-b">
-              {tabs.map(tab => (
+            <div className="flex border-b overflow-x-auto hide-scrollbar">
+              {tabs.filter(t => t.id !== 'locations' || availableLocations.length > 0).map(tab => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`px-6 py-4 font-medium transition ${
-                    activeTab === tab.id
-                      ? 'border-b-2 border-emerald-500 text-emerald-600'
-                      : 'text-gray-600 hover:text-gray-800'
-                  }`}
+                  className={`flex-none px-6 py-4 font-medium transition whitespace-nowrap ${activeTab === tab.id
+                    ? 'border-b-2 border-emerald-500 text-emerald-600'
+                    : 'text-gray-600 hover:text-gray-800'
+                    }`}
                 >
                   {tab.label}
                 </button>
@@ -258,13 +269,14 @@ export default function ProductDetailPage({ params }) {
                       {product.description}
                     </p>
                   </div>
-                  
+
                   <div>
                     <h3 className="text-lg font-semibold text-gray-800 mb-4">タグ</h3>
                     <div className="flex flex-wrap gap-2">
+                      {/* Tags rendering */}
                       {product.tags.map(tag => (
-                        <span 
-                          key={tag} 
+                        <span
+                          key={tag}
                           className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm"
                         >
                           #{tag}
@@ -327,11 +339,10 @@ export default function ProductDetailPage({ params }) {
                                   {[...Array(5)].map((_, i) => (
                                     <Star
                                       key={i}
-                                      className={`h-4 w-4 ${
-                                        i < review.rating
-                                          ? 'text-yellow-400 fill-current'
-                                          : 'text-gray-300'
-                                      }`}
+                                      className={`h-4 w-4 ${i < review.rating
+                                        ? 'text-yellow-400 fill-current'
+                                        : 'text-gray-300'
+                                        }`}
                                     />
                                   ))}
                                 </div>
@@ -347,11 +358,10 @@ export default function ProductDetailPage({ params }) {
                                 <button
                                   onClick={() => markHelpful(review.id)}
                                   disabled={hasMarkedHelpful(review.id)}
-                                  className={`flex items-center gap-1 transition ${
-                                    hasMarkedHelpful(review.id)
-                                      ? 'text-emerald-600'
-                                      : 'hover:text-emerald-600'
-                                  }`}
+                                  className={`flex items-center gap-1 transition ${hasMarkedHelpful(review.id)
+                                    ? 'text-emerald-600'
+                                    : 'hover:text-emerald-600'
+                                    }`}
                                 >
                                   <ThumbsUp className="h-4 w-4" />
                                   参考になった ({review.helpful})
@@ -366,7 +376,7 @@ export default function ProductDetailPage({ params }) {
                 </div>
               )}
 
-              {activeTab === 'locations' && (
+              {activeTab === 'locations' && availableLocations.length > 0 && (
                 <div id="locations">
                   <h3 className="text-lg font-semibold text-gray-800 mb-6">
                     体験可能な場所 ({availableLocations.length}箇所)
@@ -396,7 +406,7 @@ export default function ProductDetailPage({ params }) {
                               <span className="text-sm font-medium">{location.rating}</span>
                             </div>
                           </div>
-                          
+
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2 text-sm text-purple-600">
                               <Users className="h-4 w-4" />

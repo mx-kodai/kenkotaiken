@@ -70,16 +70,16 @@ export default function MyPage() {
             <div className="container mx-auto px-4 -mt-10 relative z-20">
                 <div className="grid lg:grid-cols-4 gap-8">
 
-                    {/* Sidebar Navigation */}
+                    {/* Sidebar Navigation (Desktop) & Mobile Scrollable Tabs */}
                     <div className="lg:col-span-1">
+                        {/* Profile Info - Desktop Only */}
                         <motion.div
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
-                            className="bg-white rounded-3xl p-6 shadow-xl shadow-gray-200/50 border border-gray-100 sticky top-24"
+                            className="bg-white rounded-3xl p-6 shadow-xl shadow-gray-200/50 border border-gray-100 sticky top-24 hidden lg:block"
                         >
                             <div className="text-center mb-8">
                                 <div className="w-24 h-24 mx-auto bg-gray-200 rounded-full mb-4 relative overflow-hidden ring-4 ring-emerald-50">
-                                    {/* Using a generic user icon if no image */}
                                     <div className="absolute inset-0 flex items-center justify-center bg-emerald-100 text-emerald-500">
                                         <User className="w-12 h-12" />
                                     </div>
@@ -97,54 +97,34 @@ export default function MyPage() {
                             </div>
 
                             <nav className="space-y-2">
-                                <SidebarItem
-                                    icon={Activity}
-                                    label="ダッシュボード"
-                                    isActive={activeTab === 'dashboard'}
-                                    onClick={() => setActiveTab('dashboard')}
-                                />
-                                <SidebarItem
-                                    icon={Calendar}
-                                    label="予約確認"
-                                    isActive={activeTab === 'reservations'}
-                                    onClick={() => setActiveTab('reservations')}
-                                />
-                                <SidebarItem
-                                    icon={Heart}
-                                    label="お気に入り"
-                                    isActive={activeTab === 'favorites'}
-                                    onClick={() => setActiveTab('favorites')}
-                                />
-                                <SidebarItem
-                                    icon={Clock}
-                                    label="閲覧履歴"
-                                    isActive={activeTab === 'history'}
-                                    onClick={() => setActiveTab('history')}
-                                />
-                                <SidebarItem
-                                    icon={Settings}
-                                    label="設定"
-                                    isActive={activeTab === 'settings'}
-                                    onClick={() => setActiveTab('settings')}
-                                />
+                                <SidebarItem icon={Activity} label="ダッシュボード" isActive={activeTab === 'dashboard'} onClick={() => setActiveTab('dashboard')} />
+                                <SidebarItem icon={Calendar} label="予約確認" isActive={activeTab === 'reservations'} onClick={() => setActiveTab('reservations')} />
+                                <SidebarItem icon={Heart} label="お気に入り" isActive={activeTab === 'favorites'} onClick={() => setActiveTab('favorites')} />
+                                <SidebarItem icon={Clock} label="閲覧履歴" isActive={activeTab === 'history'} onClick={() => setActiveTab('history')} />
+                                <SidebarItem icon={Settings} label="設定" isActive={activeTab === 'settings'} onClick={() => setActiveTab('settings')} />
                                 <div className="pt-4 mt-4 border-t border-gray-100">
-                                    <Link
-                                        href="/business"
-                                        className="w-full flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-xl transition-colors"
-                                    >
+                                    <Link href="/business" className="w-full flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-xl transition-colors">
                                         <Building2 className="w-5 h-5" />
                                         事業者ページへ
                                     </Link>
-                                    <button
-                                        onClick={handleLogout}
-                                        className="w-full flex items-center gap-3 px-4 py-3 text-red-500 font-bold hover:bg-red-50 rounded-xl transition-colors"
-                                    >
+                                    <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 text-red-500 font-bold hover:bg-red-50 rounded-xl transition-colors">
                                         <LogOut className="w-5 h-5" />
                                         ログアウト
                                     </button>
                                 </div>
                             </nav>
                         </motion.div>
+
+                        {/* Mobile Navigation (Horizontal Scroll) */}
+                        <div className="lg:hidden mb-8 -mx-4 px-4 overflow-x-auto hide-scrollbar">
+                            <div className="flex gap-2 min-w-max pb-2">
+                                <MobileTabItem icon={Activity} label="ダッシュボード" isActive={activeTab === 'dashboard'} onClick={() => setActiveTab('dashboard')} />
+                                <MobileTabItem icon={Calendar} label="予約" isActive={activeTab === 'reservations'} onClick={() => setActiveTab('reservations')} />
+                                <MobileTabItem icon={Heart} label="お気に入り" isActive={activeTab === 'favorites'} onClick={() => setActiveTab('favorites')} />
+                                <MobileTabItem icon={Clock} label="履歴" isActive={activeTab === 'history'} onClick={() => setActiveTab('history')} />
+                                <MobileTabItem icon={Settings} label="設定" isActive={activeTab === 'settings'} onClick={() => setActiveTab('settings')} />
+                            </div>
+                        </div>
                     </div>
 
                     {/* Main Content */}
@@ -172,7 +152,7 @@ export default function MyPage() {
                         {activeTab === 'dashboard' && (
                             <div className="space-y-8">
                                 {/* Stats Cards */}
-                                <div className="grid md:grid-cols-3 gap-6">
+                                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
                                     <StatCard icon={Calendar} label="今月の予約" value={`${stats.reservationsThisMonth}件`} color="bg-blue-500" />
                                     <StatCard icon={Heart} label="お気に入り" value={`${stats.totalFavorites}件`} color="bg-pink-500" />
                                     <StatCard icon={Activity} label="閲覧履歴" value={`${stats.totalViews}件`} color="bg-emerald-500" />
@@ -324,17 +304,57 @@ export default function MyPage() {
                             </div>
                         )}
 
-                        {/* Settings View */}
+                        {/* Settings View (Profile Edit) */}
                         {activeTab === 'settings' && (
-                            <div className="bg-white rounded-3xl p-12 text-center border border-gray-100">
-                                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <Settings className="w-8 h-8 text-gray-400" />
-                                </div>
-                                <h3 className="text-xl font-bold text-gray-800 mb-2">設定機能は準備中です</h3>
-                                <p className="text-gray-500">
-                                    現在開発中のため、まだご利用いただけません。<br />
-                                    今後のアップデートをお待ちください。
-                                </p>
+                            <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
+                                <h3 className="text-2xl font-bold text-gray-800 mb-6">プロフィール設定</h3>
+                                <form onSubmit={(e) => { e.preventDefault(); alert('プロフィールを更新しました（デモ）'); }}>
+
+                                    <div className="mb-6 flex items-center gap-6">
+                                        <div className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center text-gray-400 relative overflow-hidden">
+                                            {user.avatar ? <img src={user.avatar} className="object-cover w-full h-full" alt="avatar" /> : <User className="w-10 h-10" />}
+                                            <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity cursor-pointer">
+                                                <span className="text-white text-xs font-bold">変更</span>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <p className="font-bold text-gray-800">プロフィール画像</p>
+                                            <p className="text-sm text-gray-500 mb-2">JPG, PNG (最大 2MB)</p>
+                                            <button type="button" className="text-sm text-emerald-600 font-bold border border-emerald-200 px-3 py-1 rounded-lg hover:bg-emerald-50">画像を選択</button>
+                                        </div>
+                                    </div>
+
+                                    <div className="grid md:grid-cols-2 gap-6 mb-6">
+                                        <div>
+                                            <label className="block text-sm font-bold text-gray-700 mb-2">お名前</label>
+                                            <input type="text" defaultValue={user.name} className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-bold text-gray-700 mb-2">メールアドレス</label>
+                                            <input type="email" defaultValue={user.email} className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-bold text-gray-700 mb-2">電話番号</label>
+                                            <input type="tel" placeholder="090-1234-5678" className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-bold text-gray-700 mb-2">居住地</label>
+                                            <select defaultValue={user.location || "富山市"} className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                                                <option>富山市</option>
+                                                <option>高岡市</option>
+                                                <option>射水市</option>
+                                                <option>その他</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div className="pt-6 border-t border-gray-100 flex justify-end gap-3">
+                                        <button type="button" className="px-6 py-3 rounded-xl font-bold text-gray-500 hover:bg-gray-100">キャンセル</button>
+                                        <button type="submit" className="px-8 py-3 rounded-xl font-bold bg-emerald-500 text-white hover:bg-emerald-600 shadow-lg shadow-emerald-500/30">
+                                            変更を保存
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
                         )}
 
@@ -346,13 +366,28 @@ export default function MyPage() {
 }
 
 // Sub Components
+function MobileTabItem({ icon: Icon, label, isActive, onClick }) {
+    return (
+        <button
+            onClick={onClick}
+            className={`flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-bold whitespace-nowrap transition-all border ${isActive
+                    ? 'bg-emerald-500 text-white border-emerald-500 shadow-md'
+                    : 'bg-white text-gray-600 border-gray-100 hover:bg-gray-50'
+                }`}
+        >
+            <Icon className="w-4 h-4" />
+            {label}
+        </button>
+    );
+}
+
 function SidebarItem({ icon: Icon, label, isActive, onClick }) {
     return (
         <button
             onClick={onClick}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${isActive
-                    ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30'
-                    : 'text-gray-600 hover:bg-gray-50'
+                ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30'
+                : 'text-gray-600 hover:bg-gray-50'
                 }`}
         >
             <Icon className="w-5 h-5" />

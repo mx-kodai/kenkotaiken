@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowLeft, Play, Star, Heart, Calendar, Clock, MapPin, User, ThumbsUp, Share2, MessageCircle, Twitter, Facebook } from 'lucide-react';
+import Breadcrumbs from '../../components/Breadcrumbs';
 import { experienceReports } from '../../data/mockData';
 import { useLikes } from '../../hooks/useFavorites';
 import { useShare } from '../../hooks/useShare';
@@ -19,7 +20,7 @@ export default function ReportDetailPage({ params }) {
 
   if (!report) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 pt-14 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-800 mb-4">体験レポートが見つかりません</h1>
           <Link href="/reports" className="text-emerald-600 hover:text-emerald-700">
@@ -51,17 +52,13 @@ export default function ReportDetailPage({ params }) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 pt-14">
       <div className="container mx-auto px-4 py-8">
-        <div className="mb-6">
-          <Link 
-            href="/reports" 
-            className="inline-flex items-center text-gray-600 hover:text-emerald-600 transition"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            体験レポート一覧に戻る
-          </Link>
-        </div>
+
+        <Breadcrumbs items={[
+          { label: '体験レポート一覧', href: '/reports' },
+          { label: report.title }
+        ]} />
 
         <div className="bg-white rounded-lg shadow-sm overflow-hidden">
           <div className="aspect-video relative bg-gray-100">
@@ -89,7 +86,7 @@ export default function ReportDetailPage({ params }) {
                 <h1 className="text-3xl font-bold text-gray-800 mb-4">
                   {report.title}
                 </h1>
-                
+
                 <div className="flex items-center gap-6 text-sm text-gray-600 mb-4">
                   <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-full bg-gray-200 overflow-hidden">
@@ -133,9 +130,8 @@ export default function ReportDetailPage({ params }) {
               <div className="flex items-center gap-2">
                 <button
                   onClick={handleLike}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition ${
-                    liked ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-600 hover:bg-red-50'
-                  }`}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition ${liked ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-600 hover:bg-red-50'
+                    }`}
                 >
                   <Heart className={`h-4 w-4 ${liked ? 'fill-current' : ''}`} />
                   <span>{likeCount + (liked ? 1 : 0)}</span>
@@ -240,8 +236,8 @@ export default function ReportDetailPage({ params }) {
               <h3 className="text-lg font-semibold text-gray-800 mb-4">タグ</h3>
               <div className="flex flex-wrap gap-2">
                 {report.tags.map(tag => (
-                  <span 
-                    key={tag} 
+                  <span
+                    key={tag}
                     className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm"
                   >
                     #{tag}
@@ -255,13 +251,13 @@ export default function ReportDetailPage({ params }) {
                 <div className="text-sm text-gray-500">
                   投稿日: {report.createdAt.toLocaleDateString('ja-JP')}
                 </div>
-                
+
                 <div className="flex items-center gap-4">
                   <button className="flex items-center gap-2 text-gray-600 hover:text-emerald-600 transition">
                     <MessageCircle className="h-4 w-4" />
                     <span className="text-sm">コメントする</span>
                   </button>
-                  
+
                   <button className="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition">
                     <ThumbsUp className="h-4 w-4" />
                     <span className="text-sm">参考になった</span>

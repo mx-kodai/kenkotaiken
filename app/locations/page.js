@@ -112,7 +112,25 @@ export default function LocationsPage() {
           transition={{ delay: 0.2 }}
           className="bg-white rounded-3xl shadow-lg shadow-gray-200/50 mb-12 overflow-hidden border border-gray-100"
         >
-          <div className="aspect-[21/9] bg-gray-100 relative group cursor-pointer">
+          <div className="aspect-[21/9] bg-gray-100 relative group cursor-pointer isolate">
+            {/* Scroll Protection Overlay */}
+            <div
+              className="absolute inset-0 z-10 bg-transparent flex items-center justify-center pointer-events-auto"
+              onClick={(e) => {
+                e.currentTarget.style.pointerEvents = 'none';
+              }}
+              onTouchStart={(e) => {
+                // For mobile, we might want different behavior, but click-to-activate is standard pattern
+                // Or we use two-finger scroll requirement which Maps API handles if configured, but for iframe overlay is best.
+                // Simple overlay that disappears on interact
+                e.currentTarget.style.pointerEvents = 'none';
+              }}
+            >
+              <div className="bg-white/80 backdrop-blur px-4 py-2 rounded-full font-bold text-gray-600 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                マップを操作するにはタップしてください
+              </div>
+            </div>
+
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d206314.3648746749!2d137.13756495!3d36.695932799999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x5ff78e1a1bfe21bb%3A0x7b4d4c8f5a3c8e9d!2z5bul5bGx55yM!5e0!3m2!1sja!2sjp!4v1642742069000!5m2!1sja!2sjp"
               width="100%"
@@ -122,7 +140,7 @@ export default function LocationsPage() {
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
               title="富山県内の体験場所マップ"
-              className="grayscale group-hover:grayscale-0 transition-all duration-700 opacity-80 group-hover:opacity-100"
+              className="grayscale group-hover:grayscale-0 transition-all duration-700 opacity-80 group-hover:opacity-100 relative z-0"
             ></iframe>
             <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur px-4 py-2 rounded-full shadow-lg text-sm font-bold text-gray-800 flex items-center gap-2">
               <Navigation className="w-4 h-4 text-emerald-500" />

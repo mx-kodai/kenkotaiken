@@ -22,7 +22,7 @@ export default function PageHero({ title, subtitle, image, description }: PageHe
     const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
     return (
-        <div ref={ref} className="relative h-[60vh] min-h-[500px] flex items-center justify-center overflow-hidden">
+        <div ref={ref} className="relative h-[60vh] min-h-[500px] pt-14 flex items-center justify-center overflow-hidden">
             {/* Parallax Background */}
             <motion.div
                 style={{ y }}

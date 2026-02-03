@@ -10,6 +10,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import PageHero from '../components/PageHero';
 import ProductCard from '../components/ProductCard';
+import RadarChart from '../components/RadarChart';
 import { useDiagnosis } from '../hooks/useDiagnosis';
 
 export default function DiagnosisPage() {
@@ -170,90 +171,170 @@ export default function DiagnosisPage() {
               </motion.div>
             )}
 
-            {/* Result Section */}
-            {isComplete && result && (
-              <motion.div
-                key="result"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="bg-white rounded-3xl shadow-2xl shadow-emerald-500/20 border border-emerald-100 overflow-hidden"
-              >
-                <div className="relative h-48 bg-emerald-600">
-                  <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-6 text-center">
-                    <span className="text-emerald-100 font-bold tracking-wider text-sm mb-2">DIAGNOSIS RESULT</span>
-                    <h2 className="text-3xl font-bold mb-2">{result.mainCategory}</h2>
-                    <div className="w-16 h-1 bg-white/50 rounded-full" />
-                  </div>
-                </div>
-
-                <div className="p-8">
-                  <p className="text-gray-600 leading-relaxed mb-8 text-center">
-                    {result.message}
-                  </p>
-
-                  {/* ヒント */}
-                  <div className="bg-emerald-50 rounded-2xl p-6 mb-8">
-                    <h3 className="font-bold text-emerald-800 mb-4 flex items-center gap-2">
-                      <CheckCircle className="w-5 h-5 text-emerald-500" />
-                      健康アドバイス
-                    </h3>
-                    <ul className="space-y-3">
-                      {result.tips.map((tip, i) => (
-                        <li key={i} className="flex items-center gap-2 text-gray-700 bg-white p-3 rounded-lg shadow-sm border border-emerald-100">
-                          <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                          {tip}
-                        </li>
-                      ))}
-                    </ul>
+            {/* Result Section - Zero-Base Rebuild for Storytelling */
+              isComplete && result && (
+                <motion.div
+                  key="result"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="bg-white/50 backdrop-blur-sm -mx-4 md:mx-0 min-h-screen md:min-h-0"
+                >
+                  {/* 1. The Reveal (Header) */}
+                  <div className="text-center py-10 px-4">
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.2 }}
+                    >
+                      <span className="inline-block py-1 px-4 rounded-full bg-emerald-100 text-emerald-700 font-bold text-sm mb-4 tracking-wider">
+                        DIAGNOSIS COMPLETE
+                      </span>
+                      <h2 className="text-gray-500 text-sm font-medium mb-1">あなたの健康タイプは...</h2>
+                      <h1 className="text-4xl md:text-5xl font-black text-gray-900 mb-6 leading-tight">
+                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-500">
+                          {result.mainCategory}
+                        </span>
+                      </h1>
+                      <p className="text-gray-600 max-w-lg mx-auto leading-relaxed">
+                        {result.message}
+                      </p>
+                    </motion.div>
                   </div>
 
-                  {/* おすすめ商品 */}
-                  {result.recommendedProducts.length > 0 && (
-                    <div className="mb-8">
-                      <h3 className="font-bold text-gray-800 mb-4">おすすめの体験</h3>
-                      <div className="grid gap-4">
-                        {result.recommendedProducts.slice(0, 3).map(product => (
-                          <Link key={product.id} href={`/products/${product.id}`}>
-                            <div className="flex items-center gap-4 p-4 border rounded-xl hover:border-emerald-500 hover:shadow-md transition">
-                              <div className="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden relative flex-shrink-0">
-                                <Image
-                                  src={product.images[0]}
-                                  alt={product.name}
-                                  fill
-                                  className="object-cover"
-                                />
+                  {/* 2. Visual Proof (Radar Chart & Stats) */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.4 }}
+                    className="bg-white rounded-[2.5rem] shadow-xl shadow-emerald-500/10 mx-4 md:mx-0 p-8 mb-8 relative overflow-hidden"
+                  >
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-50 rounded-full blur-3xl opacity-50 pointer-events-none -translate-y-1/2 translate-x-1/2"></div>
+
+                    <div className="relative z-10 flex flex-col md:flex-row items-center gap-10">
+                      <div className="flex-1 w-full max-w-xs">
+                        <h3 className="text-center font-bold text-gray-400 text-xs tracking-widest mb-6">PERSONAL BALANCE</h3>
+                        <RadarChart
+                          data={[
+                            { label: '休息', value: result.scores?.rest || 80, fullMark: 100 },
+                            { label: '運動', value: result.scores?.activity || 40, fullMark: 100 },
+                            { label: '栄養', value: result.scores?.nutrition || 60, fullMark: 100 },
+                            { label: 'メンタル', value: result.scores?.mental || 50, fullMark: 100 },
+                            { label: '環境', value: result.scores?.environment || 70, fullMark: 100 },
+                          ]}
+                        />
+                      </div>
+
+                      <div className="flex-1 w-full">
+                        <h3 className="font-bold text-gray-800 mb-6 flex items-center gap-2">
+                          <CheckCircle className="w-5 h-5 text-emerald-500" />
+                          AI分析レポート
+                        </h3>
+                        <div className="space-y-4">
+                          {result.tips.map((tip, i) => (
+                            <motion.div
+                              key={i}
+                              initial={{ opacity: 0, x: 20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: 0.6 + (i * 0.1) }}
+                              className="bg-gray-50 p-4 rounded-xl border border-gray-100 flex items-start gap-3"
+                            >
+                              <span className="flex-none w-6 h-6 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-xs mt-0.5">
+                                {i + 1}
+                              </span>
+                              <p className="text-gray-700 text-sm font-medium leading-relaxed">{tip}</p>
+                            </motion.div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  {/* 3. The Prescription (Solution) */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.8 }}
+                    className="px-4 md:px-0 mb-24"
+                  >
+                    <div className="flex items-center justify-between mb-6">
+                      <h3 className="text-xl font-bold text-gray-900">あなたへの処方箋</h3>
+                      <Link href="/products" className="text-emerald-600 text-sm font-bold flex items-center hover:underline">
+                        すべて見る <ArrowRight className="w-4 h-4 ml-1" />
+                      </Link>
+                    </div>
+
+                    {result.recommendedProducts.length > 0 ? (
+                      <div className="grid gap-6">
+                        {result.recommendedProducts.slice(0, 1).map(product => (
+                          <Link key={product.id} href={`/products/${product.id}`} className="block group">
+                            <div className="bg-white rounded-3xl p-4 shadow-xl shadow-gray-200/50 border border-emerald-100 hover:border-emerald-300 transition-all duration-300 relative overflow-hidden">
+                              <div className="absolute top-0 left-0 bg-emerald-500 text-white text-xs font-bold px-4 py-1 rounded-br-2xl z-20">
+                                MATCH 98%
                               </div>
-                              <div className="flex-1">
-                                <h4 className="font-medium text-gray-800">{product.name}</h4>
-                                <p className="text-sm text-gray-500">{product.category.name}</p>
+                              <div className="flex flex-col md:flex-row gap-6">
+                                <div className="w-full md:w-48 aspect-video md:aspect-square rounded-2xl overflow-hidden relative">
+                                  <Image
+                                    src={product.images[0]}
+                                    alt={product.name}
+                                    fill
+                                    className="object-cover group-hover:scale-110 transition-transform duration-700"
+                                  />
+                                </div>
+                                <div className="flex-1 py-2">
+                                  <div className="flex items-center gap-2 mb-2">
+                                    <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md">必須</span>
+                                    <span className="text-xs text-gray-500">{product.category.name}</span>
+                                  </div>
+                                  <h4 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-emerald-600 transition-colors">
+                                    {product.name}
+                                  </h4>
+                                  <p className="text-gray-600 text-sm line-clamp-2 mb-4">
+                                    {product.description}
+                                  </p>
+                                  <div className="flex items-center justify-between mt-auto">
+                                    <span className="font-bold text-lg text-gray-900">
+                                      {product.price === 0 ? '無料体験' : `¥${product.price.toLocaleString()}`}
+                                    </span>
+                                    <span className="bg-gray-900 text-white px-6 py-2 rounded-full font-bold text-sm group-hover:bg-emerald-600 transition-colors">
+                                      詳細を見る
+                                    </span>
+                                  </div>
+                                </div>
                               </div>
-                              <ArrowRight className="w-5 h-5 text-gray-300" />
                             </div>
                           </Link>
                         ))}
+                        {/* Secondary Recommendations */}
+                        <div className="grid grid-cols-2 gap-4 mt-2">
+                          {result.recommendedProducts.slice(1, 3).map(product => (
+                            <Link key={product.id} href={`/products/${product.id}`} className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition flex flex-col">
+                              <div className="aspect-video relative rounded-xl overflow-hidden mb-3">
+                                <Image src={product.images[0]} alt={product.name} fill className="object-cover" />
+                              </div>
+                              <h5 className="font-bold text-gray-800 text-sm line-clamp-1 mb-1">{product.name}</h5>
+                              <p className="text-emerald-600 font-bold text-xs mt-auto">マッチ度 85%</p>
+                            </Link>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    ) : (
+                      <div className="p-8 text-center bg-white rounded-3xl border border-dashed border-gray-300">
+                        <p className="text-gray-500">条件に一致する体験が見つかりませんでした。</p>
+                      </div>
+                    )}
 
-                  <div className="flex flex-col gap-3">
-                    <Link
-                      href="/products"
-                      className="w-full bg-emerald-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-emerald-500/30 hover:bg-emerald-600 hover:translate-y-px transition-all flex items-center justify-center gap-2 group"
-                    >
-                      すべての体験を見る
-                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                    </Link>
-                    <button
-                      onClick={resetQuiz}
-                      className="w-full bg-white text-gray-500 font-bold py-3 rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
-                    >
-                      <RefreshCw className="w-4 h-4" />
-                      もう一度診断する
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            )}
+                    <div className="mt-12 flex justify-center">
+                      <button
+                        onClick={resetQuiz}
+                        className="text-gray-400 hover:text-gray-600 font-bold text-sm flex items-center gap-2 transition-colors px-6 py-3 rounded-full hover:bg-gray-100"
+                      >
+                        <RefreshCw className="w-4 h-4" />
+                        診断をやり直す
+                      </button>
+                    </div>
+                  </motion.div>
+                </motion.div>
+              )}
           </AnimatePresence>
         </div>
       </div>

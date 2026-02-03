@@ -1,7 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { Building, Users, TrendingUp, Shield, Award, Target, CheckCircle, ArrowRight, Phone, Mail } from 'lucide-react';
+import { Building, Users, TrendingUp, Shield, Award, Target, CheckCircle, ArrowRight, Phone, Mail, Sparkles } from 'lucide-react';
+import { motion } from 'framer-motion';
+import PageHero from '../components/PageHero';
 
 export default function PartnerPage() {
   const [formData, setFormData] = useState({
@@ -20,22 +22,23 @@ export default function PartnerPage() {
       description: '購入前に体験したい顧客層にリーチできます'
     },
     {
-      icon: <TrendingUp className="h-8 w-8 text-blue-500" />,
+      icon: <TrendingUp className="h-8 w-8 text-emerald-500" />,
       title: '認知度向上',
       description: '商品の良さを実際に体感してもらえます'
     },
     {
-      icon: <Shield className="h-8 w-8 text-purple-500" />,
+      icon: <Shield className="h-8 w-8 text-emerald-500" />,
       title: '信頼性向上',
       description: '無料体験により購入後の満足度が向上します'
     },
     {
-      icon: <Award className="h-8 w-8 text-yellow-500" />,
+      icon: <Award className="h-8 w-8 text-emerald-500" />,
       title: 'ブランド価値',
       description: '健康意識の高い層への効果的なPRが可能です'
     }
   ];
 
+  // ... (partnerTypes definition remains same) ...
   const partnerTypes = [
     {
       title: 'メーカー様',
@@ -99,33 +102,42 @@ export default function PartnerPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-        <div className="container mx-auto px-4 py-16">
-          <div className="text-center max-w-3xl mx-auto">
-            <h1 className="text-4xl font-bold mb-4">パートナー募集</h1>
-            <p className="text-lg opacity-90">
-              健康デバイスの無料体験を通じて、一緒に地域の健康づくりに貢献しませんか？
-            </p>
-          </div>
-        </div>
-      </div>
+      <PageHero
+        title="For Partners"
+        subtitle="掲載パートナー募集"
+        image="/images/hero_partner_business.png"
+        description="健康デバイスの無料体験を通じて、一緒に地域の健康づくりに貢献しませんか？"
+      />
 
-      <div className="container mx-auto px-4 py-16">
+      <div className="container mx-auto px-4 py-16 -mt-10 relative z-10">
         <div className="max-w-6xl mx-auto">
-          <section className="mb-16">
-            <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">
-              パートナーになるメリット
-            </h2>
+          {/* Benefits Section */}
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-16"
+          >
+
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {benefits.map((benefit, index) => (
-                <div key={index} className="bg-white rounded-lg shadow-sm p-6 text-center">
-                  <div className="mb-4">{benefit.icon}</div>
-                  <h3 className="font-semibold text-gray-800 mb-2">{benefit.title}</h3>
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                  className="bg-white rounded-2xl shadow-lg hover:shadow-xl p-6 text-center transition-all duration-300 border border-gray-100 hover:-translate-y-1"
+                >
+                  <div className="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                    {benefit.icon}
+                  </div>
+                  <h3 className="font-bold text-gray-800 mb-2">{benefit.title}</h3>
                   <p className="text-sm text-gray-600">{benefit.description}</p>
-                </div>
+                </motion.div>
               ))}
             </div>
-          </section>
+          </motion.section>
 
           <section className="mb-16">
             <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">
@@ -179,7 +191,7 @@ export default function PartnerPage() {
               <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">
                 パートナー申請フォーム
               </h2>
-              
+
               <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
@@ -195,7 +207,7 @@ export default function PartnerPage() {
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     />
                   </div>
-                  
+
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       ご担当者名 <span className="text-red-500">*</span>
@@ -225,7 +237,7 @@ export default function PartnerPage() {
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     />
                   </div>
-                  
+
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       電話番号 <span className="text-red-500">*</span>

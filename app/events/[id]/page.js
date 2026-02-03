@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowLeft, Calendar, MapPin, Clock, Users, Phone, Mail, Tag, Star, Heart, Share2, AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
 import ProductCard from '../../components/ProductCard';
+import Breadcrumbs from '../../components/Breadcrumbs';
 import { experienceEvents } from '../../data/mockData';
 import { useLikes, useFavorites } from '../../hooks/useFavorites';
 import { useShare } from '../../hooks/useShare';
@@ -23,12 +24,12 @@ export default function EventDetailPage({ params }) {
   const { isFavorite, toggleFavorite, isLoading: favoriteLoading } = useFavorites(params.id, 'event');
   const { shareToTwitter, shareToFacebook, shareToLine, copyLink } = useShare();
   const { reserve, isSubmitting: reservationSubmitting, isReserved, error: reservationError } = useEventReservation(params.id);
-  
+
   const event = experienceEvents.find(e => e.id === params.id);
-  
+
   if (!event) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 pt-14 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-800 mb-4">イベントが見つかりません</h1>
           <Link href="/events" className="text-emerald-600 hover:text-emerald-700">
@@ -97,9 +98,9 @@ export default function EventDetailPage({ params }) {
   };
 
   const formatDate = (date) => {
-    return date.toLocaleDateString('ja-JP', { 
+    return date.toLocaleDateString('ja-JP', {
       year: 'numeric',
-      month: 'long', 
+      month: 'long',
       day: 'numeric',
       weekday: 'long'
     });
@@ -110,16 +111,13 @@ export default function EventDetailPage({ params }) {
     .slice(0, 3);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 pt-14">
       <div className="container mx-auto px-4 py-8">
         <div className="mb-6">
-          <Link 
-            href="/events" 
-            className="inline-flex items-center text-gray-600 hover:text-emerald-600 transition"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            イベント一覧に戻る
-          </Link>
+          <Breadcrumbs items={[
+            { label: 'イベント一覧', href: '/events' },
+            { label: event.title }
+          ]} />
         </div>
 
         <div className="bg-white rounded-lg shadow-sm overflow-hidden">
@@ -142,14 +140,13 @@ export default function EventDetailPage({ params }) {
                 </span>
               )}
             </div>
-            
+
             <div className="absolute bottom-4 right-4 flex gap-2">
               <button
                 onClick={toggleLike}
                 disabled={likeLoading}
-                className={`p-2 rounded-full backdrop-blur-sm transition flex items-center gap-1 ${
-                  isLiked ? 'bg-red-100/80 text-red-600' : 'bg-white/80 text-gray-600 hover:bg-red-50/80'
-                }`}
+                className={`p-2 rounded-full backdrop-blur-sm transition flex items-center gap-1 ${isLiked ? 'bg-red-100/80 text-red-600' : 'bg-white/80 text-gray-600 hover:bg-red-50/80'
+                  }`}
               >
                 <Heart className={`h-5 w-5 ${isLiked ? 'fill-current' : ''}`} />
                 {likeCount > 0 && <span className="text-sm">{likeCount}</span>}
@@ -167,7 +164,7 @@ export default function EventDetailPage({ params }) {
                 </div>
               </div>
             </div>
-            
+
             <div className="absolute top-4 left-4 bg-pink-500 text-white text-sm px-3 py-1 rounded-full">
               期間限定イベント
             </div>
@@ -179,7 +176,7 @@ export default function EventDetailPage({ params }) {
                 <h1 className="text-3xl font-bold text-gray-800 mb-4">
                   {event.title}
                 </h1>
-                
+
                 <div className="grid md:grid-cols-2 gap-6 mb-6">
                   <div className="space-y-3">
                     <div className="flex items-center gap-3">
@@ -196,7 +193,7 @@ export default function EventDetailPage({ params }) {
                       <div>
                         <div className="font-medium text-gray-800">
                           {formatDate(event.startDate)}
-                          {event.startDate.getTime() !== event.endDate.getTime() && 
+                          {event.startDate.getTime() !== event.endDate.getTime() &&
                             ` - ${formatDate(event.endDate)}`
                           }
                         </div>
@@ -266,8 +263,8 @@ export default function EventDetailPage({ params }) {
                 <h4 className="font-semibold text-gray-800 mb-3">タグ</h4>
                 <div className="flex flex-wrap gap-2">
                   {event.tags.map(tag => (
-                    <span 
-                      key={tag} 
+                    <span
+                      key={tag}
                       className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm"
                     >
                       #{tag}
@@ -301,13 +298,13 @@ export default function EventDetailPage({ params }) {
                             <p className="text-sm text-gray-600">{product.company.name}</p>
                           </div>
                         </div>
-                        
+
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-1">
                             <Star className="h-4 w-4 text-yellow-400 fill-current" />
                             <span className="text-sm font-medium">{product.rating}</span>
                           </div>
-                          
+
                           <span className="text-xs bg-pink-100 text-pink-700 px-2 py-1 rounded">
                             イベント特別価格
                           </span>
@@ -324,7 +321,7 @@ export default function EventDetailPage({ params }) {
                 <h3 className="text-xl font-semibold text-gray-800 mb-4">
                   イベント参加予約
                 </h3>
-                
+
                 {statusInfo.status === 'full' ? (
                   <div className="text-center py-8">
                     <AlertCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
@@ -351,7 +348,7 @@ export default function EventDetailPage({ params }) {
                         <input
                           type="text"
                           value={registrationData.name}
-                          onChange={(e) => setRegistrationData({...registrationData, name: e.target.value})}
+                          onChange={(e) => setRegistrationData({ ...registrationData, name: e.target.value })}
                           className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
                           placeholder="山田太郎"
                         />
@@ -364,7 +361,7 @@ export default function EventDetailPage({ params }) {
                         <input
                           type="email"
                           value={registrationData.email}
-                          onChange={(e) => setRegistrationData({...registrationData, email: e.target.value})}
+                          onChange={(e) => setRegistrationData({ ...registrationData, email: e.target.value })}
                           className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
                           placeholder="example@email.com"
                         />
@@ -379,7 +376,7 @@ export default function EventDetailPage({ params }) {
                         <input
                           type="tel"
                           value={registrationData.phone}
-                          onChange={(e) => setRegistrationData({...registrationData, phone: e.target.value})}
+                          onChange={(e) => setRegistrationData({ ...registrationData, phone: e.target.value })}
                           className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
                           placeholder="090-1234-5678"
                         />
@@ -391,10 +388,10 @@ export default function EventDetailPage({ params }) {
                         </label>
                         <select
                           value={registrationData.participants}
-                          onChange={(e) => setRegistrationData({...registrationData, participants: parseInt(e.target.value)})}
+                          onChange={(e) => setRegistrationData({ ...registrationData, participants: parseInt(e.target.value) })}
                           className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
                         >
-                          {[1,2,3,4,5].map(num => (
+                          {[1, 2, 3, 4, 5].map(num => (
                             <option key={num} value={num}>{num}名</option>
                           ))}
                         </select>
